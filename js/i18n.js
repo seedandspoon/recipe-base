@@ -90,6 +90,8 @@ export const STRINGS = {
   my_notes: { fr: 'Mes notes', en: 'My notes' },
   set_current_phase: { fr: 'Je suis dans cette phase en ce moment', en: "This is my phase right now" },
   current_phase_badge: { fr: 'Phase actuelle', en: 'Current phase' },
+  phase_recipes_title: { fr: 'Recettes de cette phase', en: 'Recipes for this phase' },
+  no_phase_recipes: { fr: 'Aucune recette bien adaptée à la phase {phase} pour l’instant.', en: 'No recipes are a strong fit for the {phase} phase yet.' },
 
   // Foods
   food_name_fr: { fr: 'Nom (français)', en: 'Name (French)' },

@@ -6,13 +6,7 @@ import { state, updateSettings } from './store.js';
 import { t } from './i18n.js';
 import { escapeHtml } from './utils.js';
 import { render as rerenderRoute } from './router.js';
-
-const PHASE_ICONS = {
-  menstrual: '❄️',
-  follicular: '🌱',
-  ovulatory: '☀️',
-  luteal: '🍂',
-};
+import { PHASE_ICONS } from './views/shared.js';
 
 let open = false;
 

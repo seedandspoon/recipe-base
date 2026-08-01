@@ -304,8 +304,12 @@ legend { padding: 0 0.4rem; font-weight: 600; font-size: 0.9rem; }
 .phase-tab { padding: 0.5rem 0.9rem; border-radius: 999px; border: 1px solid var(--border); font-size: 0.85rem; }
 .phase-tab.active { color: #fff; border-color: transparent; }
 .phase-card { border-left: 4px solid var(--accent); background: var(--surface); border-radius: var(--radius); padding: 1.2rem 1.4rem; box-shadow: var(--shadow); }
-.phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1rem 0; }
-.phase-fact h4 { margin: 0 0 0.25rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+.phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem; margin: 1rem 0; }
+.phase-fact { background: #f6f4ef; border-radius: 8px; padding: 0.7rem 0.9rem; }
+.phase-fact h4 { margin: 0 0 0.3rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+.phase-fact p { margin: 0; font-weight: 600; font-size: 0.92rem; line-height: 1.4; }
+.food-category-group { margin: 0.8rem 0; }
+.food-category-group h4 { margin: 0 0 0.4rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
 .food-chip-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .food-chip { background: #f1efe9; border-radius: 999px; padding: 0.3rem 0.7rem; font-size: 0.82rem; display: inline-flex; gap: 0.4rem; align-items: center; }
 

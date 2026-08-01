@@ -5,6 +5,7 @@ import { scoreRecipeForPhase, scoreLabel } from '../match-score.js';
 export const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert'];
 export const MEAL_TYPE_ICONS = { breakfast: '🥐', lunch: '🥗', dinner: '🍽️', snack: '🍿', dessert: '🍰' };
 export const MEAL_TYPE_ICON_FALLBACK = '🍴';
+export const PHASE_ICONS = { menstrual: '❄️', follicular: '🌱', ovulatory: '☀️', luteal: '🍂' };
 export const SEASONS = ['spring', 'summer', 'autumn', 'winter', 'any'];
 export const DIFFICULTIES = ['easy', 'medium', 'hard'];
 export const STATUSES = ['draft', 'active', 'archived'];
