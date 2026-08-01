@@ -125,6 +125,11 @@ export function normalizeStepSections(steps) {
   return items.length ? [{ title: '', items }] : [];
 }
 
+export function capitalize(str) {
+  const s = String(str ?? '');
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
 export function uniqueSorted(values) {
   return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b));
 }

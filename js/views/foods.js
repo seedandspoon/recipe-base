@@ -1,8 +1,10 @@
 import { state, saveFood, deleteFood } from '../store.js';
 import { t } from '../i18n.js';
-import { escapeHtml } from '../utils.js';
+import { escapeHtml, capitalize } from '../utils.js';
 import { toast } from '../toast.js';
-import { AISLES, FOOD_CATEGORIES } from './shared.js';
+import { AISLES, FOOD_CATEGORIES, PHASE_ICONS } from './shared.js';
+
+const ALL_PHASES = ['menstrual', 'follicular', 'ovulatory', 'luteal'];
 
 let editingId = null;
 let creating = false;
@@ -48,7 +50,7 @@ function paint() {
           <tr>
             <th>${t('food_name_fr')} / ${t('food_name_en')}</th>
             <th>${t('category')}</th>
-            <th>${t('phase_menstrual')[0]}${t('phase_follicular')[0]}${t('phase_ovulatory')[0]}${t('phase_luteal')[0]}</th>
+            <th title="${ALL_PHASES.map((p) => `${PHASE_ICONS[p]} ${t(`phase_${p}`)}`).join(' · ')}">${t('favored_foods')}</th>
             <th>${t('glycemic_index')}</th>
             <th>${t('organic_priority')}</th>
             <th>${t('aisle')}</th>
@@ -60,6 +62,7 @@ function paint() {
         </tbody>
       </table>
     </div>
+    <p class="small muted">${ALL_PHASES.map((p) => `${PHASE_ICONS[p]} ${t(`phase_${p}`)}`).join(' · ')}</p>
 
     <p class="small muted mt-1">
       ${t('sources')}: International Tables of Glycemic Index and Glycemic Load (Atkinson, Foster-Powell &amp; Brand-Miller, <em>Diabetes Care</em>, 2008); University of Sydney Glycemic Index Database (glycemicindex.com); Harvard Health Publishing glycemic index chart. Organic priority: EWG Shopper's Guide to Pesticides in Produce, 2025 edition (ewg.org) — covers fresh produce only; other categories are marked "not rated". Values are commonly published approximations — correct any of them freely.
@@ -91,16 +94,19 @@ function emptyFood() {
 }
 
 function foodRowHtml(f) {
-  const phaseInitials = ['menstrual', 'follicular', 'ovulatory', 'luteal']
-    .map((p) => (f.phases || []).includes(p) ? `<span class="badge badge-phase-${p}">${t(`phase_${p}`)[0]}</span>` : '')
+  const phaseIcons = ALL_PHASES
+    .map((p) => (f.phases || []).includes(p) ? `<span title="${t(`phase_${p}`)}">${PHASE_ICONS[p]}</span>` : '')
     .join(' ');
   const editing = editingId === f.id;
+  const giCell = f.gi.level === 'na'
+    ? `<span title="${t('gi_not_applicable_hint')}">${t('gi_not_applicable')}</span>`
+    : `${f.gi.value ?? ''} (${t(`gi_${f.gi.level}`)})`;
   return `
     <tr data-food-row="${f.id}">
-      <td>${escapeHtml(f.name_fr)} / ${escapeHtml(f.name_en)}</td>
+      <td>${escapeHtml(capitalize(f.name_fr))} / ${escapeHtml(capitalize(f.name_en))}</td>
       <td>${f.category ? t(`category_${f.category}`) : ''}</td>
-      <td>${phaseInitials}</td>
-      <td>${f.gi.level === 'na' ? t('gi_not_applicable') : `${f.gi.value ?? ''} (${t(`gi_${f.gi.level}`)})`}</td>
+      <td>${phaseIcons || '—'}</td>
+      <td>${giCell}</td>
       <td>${f.organic.level === 'na' ? t('organic_na') : f.organic.level === 'high' ? t('organic_high') : t('organic_low')}</td>
       <td>${t(`aisle_${f.aisle}`)}</td>
       <td class="filter-row">
@@ -136,7 +142,7 @@ function foodFormHtml(f) {
       </div>
       <div class="field-row">
         <div class="field"><label>${t('glycemic_index')}</label><select id="ff-gi-level">${GI_LEVELS.map((l) => `<option value="${l}" ${l===f.gi.level?'selected':''}>${l === 'na' ? t('gi_not_applicable') : t(`gi_${l}`)}</option>`).join('')}</select></div>
-        <div class="field"><label>Valeur IG (0-100)</label><input id="ff-gi-value" type="number" min="0" max="100" value="${f.gi.value ?? ''}" /></div>
+        <div class="field"><label>${document.documentElement.lang === 'en' ? 'IG value, 0–100 (optional)' : 'Valeur IG, 0 à 100 (facultatif)'}</label><input id="ff-gi-value" type="number" min="0" max="100" placeholder="—" value="${f.gi.value ?? ''}" /></div>
         <div class="field"><label>${t('organic_priority')}</label><select id="ff-organic">${ORGANIC_LEVELS.map((l) => `<option value="${l}" ${l===f.organic.level?'selected':''}>${l==='na'?t('organic_na'):l==='high'?t('organic_high'):t('organic_low')}</option>`).join('')}</select></div>
       </div>
       <div class="filter-row">

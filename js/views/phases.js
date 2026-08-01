@@ -1,7 +1,7 @@
 import { state, savePhase, setWeekPlanEntry } from '../store.js';
 import { t, tField } from '../i18n.js';
 import { go } from '../router.js';
-import { escapeHtml } from '../utils.js';
+import { escapeHtml, capitalize } from '../utils.js';
 import { toast } from '../toast.js';
 import { scoreRecipeForPhase } from '../match-score.js';
 import { recipeCardHtml, FOOD_CATEGORIES, PHASE_ICONS } from './shared.js';
@@ -71,8 +71,8 @@ function paint(activeId) {
           <div class="food-chip-list">
             ${foodsByCategory.get(cat).map((f) => `
               <a class="food-chip" href="#/foods?highlight=${f.id}">
-                ${escapeHtml(f.name_fr)}
-                <span title="${t('glycemic_index')}: ${f.gi.level === 'na' ? t('gi_not_applicable') : t(`gi_${f.gi.level}`)}">${GI_DOTS[f.gi.level] || ''}</span>
+                ${escapeHtml(capitalize(f.name_fr))}
+                <span title="${t('glycemic_index')}: ${f.gi.level === 'na' ? t('gi_not_applicable_hint') : t(`gi_${f.gi.level}`)}">${GI_DOTS[f.gi.level] || ''}</span>
                 ${f.organic.level === 'high' ? `<span title="${t('organic_high')}">🌱</span>` : ''}
                 ${f.organic.level === 'low' ? `<span title="${t('organic_low')}">✓</span>` : ''}
               </a>`).join('')}
