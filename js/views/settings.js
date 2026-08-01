@@ -30,6 +30,12 @@ function paint() {
         </div>` : ''}
     </div>
 
+    <div class="card cycle-only">
+      <h2>${t('nav_foods')}</h2>
+      <p class="small muted">${t('manage_foods_hint')}</p>
+      <a class="btn" href="#/foods">${t('manage_foods')}</a>
+    </div>
+
     <div class="card">
       <label>${t('language')}</label>
       <div class="filter-row">

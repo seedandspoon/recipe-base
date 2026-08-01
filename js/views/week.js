@@ -1,11 +1,11 @@
-import { state, setWeekPlanEntry, removeWeekPlanEntry, saveShoppingList, saveFood } from '../store.js';
+import { state, setWeekPlanEntry, removeWeekPlanEntry, saveShoppingList } from '../store.js';
 import { t } from '../i18n.js';
 import { escapeHtml, parseQuantity, formatQuantity } from '../utils.js';
 import { matchIngredientLine, buildFoodIndex, normalize, singularize } from '../matcher.js';
 import { toast } from '../toast.js';
-import { AISLES } from './shared.js';
+import { go } from '../router.js';
 
-export async function renderPlanner() {
+export async function renderWeek() {
   paint();
 }
 
@@ -17,10 +17,7 @@ function paint() {
   document.getElementById('view').innerHTML = `
     <h1>${t('this_week')}</h1>
     ${entries.length === 0 ? `<div class="empty-state">${t('empty_week')}</div>` : entries.map((e) => planItemHtml(e)).join('')}
-
     ${entries.length > 0 ? `<button class="btn btn-primary mt-1" id="generate-btn">${t('generate_list')}</button>` : ''}
-
-    ${state.shoppingList && state.shoppingList.items && state.shoppingList.items.length > 0 ? shoppingListHtml() : ''}
   `;
 
   document.querySelectorAll('[data-portions-for]').forEach((input) => {
@@ -38,36 +35,9 @@ function paint() {
   });
 
   const genBtn = document.getElementById('generate-btn');
-  if (genBtn) genBtn.addEventListener('click', async () => { await generateShoppingList(entries); paint(); });
-
-  document.querySelectorAll('[data-toggle-item]').forEach((cb) => {
-    cb.addEventListener('change', async () => {
-      const list = { ...state.shoppingList };
-      const item = list.items.find((i) => i.id === cb.dataset.toggleItem);
-      item.checked = cb.checked;
-      await saveShoppingList(list);
-      paint();
-    });
-  });
-  document.querySelectorAll('[data-item-aisle]').forEach((sel) => {
-    sel.addEventListener('change', async () => {
-      const list = { ...state.shoppingList };
-      const item = list.items.find((i) => i.id === sel.dataset.itemAisle);
-      item.aisle = sel.value;
-      await saveShoppingList(list);
-      if (item.foodId) {
-        const food = state.foods.find((f) => f.id === item.foodId);
-        if (food) await saveFood({ ...food, aisle: sel.value });
-      }
-      toast(t('save') + ' ✓');
-      paint();
-    });
-  });
-  const clearBtn = document.getElementById('clear-checked-btn');
-  if (clearBtn) clearBtn.addEventListener('click', async () => {
-    const list = { ...state.shoppingList, items: state.shoppingList.items.filter((i) => !i.checked) };
-    await saveShoppingList(list);
-    paint();
+  if (genBtn) genBtn.addEventListener('click', async () => {
+    await generateShoppingList(entries);
+    go('/shopping');
   });
 }
 
@@ -85,39 +55,11 @@ function planItemHtml(e) {
     </div>`;
 }
 
-function shoppingListHtml() {
-  const groups = new Map();
-  for (const item of state.shoppingList.items) {
-    const key = item.aisle || 'other';
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(item);
-  }
-  const orderedAisles = AISLES.filter((a) => groups.has(a));
-
-  return `
-    <hr class="sep" />
-    <div class="flex-between">
-      <h2>${t('shopping_list')}</h2>
-      <button class="btn btn-small" id="clear-checked-btn">${t('clear_checked')}</button>
-    </div>
-    ${orderedAisles.map((aisle) => `
-      <div class="aisle-group">
-        <h3>${t(`aisle_${aisle}`)}</h3>
-        ${groups.get(aisle).map((item) => `
-          <div class="shopping-item ${item.checked ? 'checked' : ''}">
-            <input type="checkbox" data-toggle-item="${item.id}" ${item.checked ? 'checked' : ''} />
-            <span class="label">${escapeHtml(item.label)}</span>
-            <select data-item-aisle="${item.id}">${AISLES.map((a) => `<option value="${a}" ${a===item.aisle?'selected':''}>${t(`aisle_${a}`)}</option>`).join('')}</select>
-          </div>`).join('')}
-      </div>`).join('')}
-  `;
-}
-
 async function generateShoppingList(entries) {
   const foodIndex = buildFoodIndex(state.foods);
   const foodById = new Map(state.foods.map((f) => [f.id, f]));
 
-  // group key -> { foodId, name, aisle, parts: Map(unit -> qtySum), unmatchedTexts: [] }
+  // group key -> { foodId, name, aisle, parts: Map(unit -> qtySum) }
   const groups = new Map();
 
   for (const e of entries) {

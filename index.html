@@ -19,23 +19,28 @@
     <a class="brand" href="#/gallery" data-i18n="app_title">Carnet de recettes</a>
     <nav class="topnav" id="main-nav">
       <a href="#/gallery" data-route="gallery" data-i18n="nav_gallery">Recettes</a>
+      <a href="#/week" data-route="week" data-i18n="nav_week">Cette semaine</a>
+      <a href="#/shopping" data-route="shopping" data-i18n="nav_shopping">Courses</a>
       <a href="#/phases" data-route="phases" data-i18n="nav_phases" class="cycle-only">Cycle</a>
-      <a href="#/foods" data-route="foods" data-i18n="nav_foods" class="cycle-only">Aliments</a>
-      <a href="#/planner" data-route="planner" data-i18n="nav_planner">Semaine</a>
-      <a href="#/settings" data-route="settings" data-i18n="nav_settings">Réglages</a>
     </nav>
-    <a class="btn btn-primary add-btn" href="#/import" data-i18n="nav_add">Ajouter</a>
+    <div class="topbar-actions">
+      <div class="phase-picker cycle-only" id="phase-picker"></div>
+      <a class="icon-btn" href="#/gallery?focus=search" data-i18n-title="search" title="Chercher" aria-label="Chercher">🔍</a>
+      <a class="icon-btn" href="#/settings" data-route="settings" data-i18n-title="nav_settings" title="Réglages" aria-label="Réglages">⚙️</a>
+    </div>
   </header>
 
   <main id="view"></main>
 
   <nav class="bottomnav" id="bottom-nav">
     <a href="#/gallery" data-route="gallery"><span class="icon">📖</span><span data-i18n="nav_gallery">Recettes</span></a>
+    <a href="#/week" data-route="week"><span class="icon">🗓️</span><span data-i18n="nav_week">Semaine</span></a>
+    <a href="#/shopping" data-route="shopping"><span class="icon">🛒</span><span data-i18n="nav_shopping">Courses</span></a>
     <a href="#/phases" data-route="phases" class="cycle-only"><span class="icon">🌙</span><span data-i18n="nav_phases">Cycle</span></a>
-    <a href="#/planner" data-route="planner"><span class="icon">🛒</span><span data-i18n="nav_planner">Semaine</span></a>
-    <a href="#/import" data-route="import"><span class="icon">➕</span><span data-i18n="nav_add">Ajouter</span></a>
     <a href="#/settings" data-route="settings"><span class="icon">⚙️</span><span data-i18n="nav_settings">Réglages</span></a>
   </nav>
+
+  <a class="fab" href="#/import" data-i18n-title="nav_add" title="Ajouter" aria-label="Ajouter">+</a>
 </div>
 
 <div id="toast" class="toast" hidden></div>

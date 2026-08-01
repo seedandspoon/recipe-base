@@ -67,7 +67,7 @@ function groupByMealType(list) {
   return groups;
 }
 
-export async function renderGallery() {
+export async function renderGallery({ query: routeQuery } = {}) {
   const cuisines = uniqueSorted(state.recipes.map((r) => r.cuisine));
   const tags = uniqueSorted(state.recipes.flatMap((r) => r.tags || []));
   const cycleOn = state.settings.cycleModeEnabled;
@@ -129,4 +129,9 @@ export async function renderGallery() {
     Object.assign(filters, { q: '', mealType: '', cuisine: '', season: '', difficulty: '', status: 'active', tag: '', minRating: '', sort: 'recent' });
     renderGallery();
   });
+
+  if (routeQuery && routeQuery.focus === 'search') {
+    document.getElementById('f-q').focus();
+    history.replaceState(null, '', '#/gallery');
+  }
 }

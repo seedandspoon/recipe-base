@@ -7,11 +7,14 @@ export const STRINGS = {
   nav_phases: { fr: 'Cycle', en: 'Cycle' },
   nav_foods: { fr: 'Aliments', en: 'Foods' },
   nav_planner: { fr: 'Semaine', en: 'Week' },
+  nav_week: { fr: 'Cette semaine', en: 'This week' },
+  nav_shopping: { fr: 'Courses', en: 'Shopping' },
   nav_settings: { fr: 'Réglages', en: 'Settings' },
   nav_add: { fr: 'Ajouter', en: 'Add' },
 
   // Gallery
   search_placeholder: { fr: 'Chercher par nom ou ingrédient…', en: 'Search by name or ingredient…' },
+  search: { fr: 'Chercher', en: 'Search' },
   filters: { fr: 'Filtres', en: 'Filters' },
   clear_filters: { fr: 'Réinitialiser', en: 'Clear filters' },
   meal_type: { fr: 'Type de repas', en: 'Meal type' },
@@ -86,6 +89,11 @@ export const STRINGS = {
   category: { fr: 'Catégorie', en: 'Category' },
   add_food: { fr: 'Ajouter un aliment', en: 'Add a food' },
   sources: { fr: 'Sources', en: 'Sources' },
+  manage_foods: { fr: 'Gérer mes aliments', en: 'Manage my foods' },
+  manage_foods_hint: {
+    fr: 'Le catalogue que l’app reconnaît dans tes recettes : index glycémique, priorité bio, catégorie, phases. Tu peux tout modifier.',
+    en: 'The catalog the app recognizes in your recipes: glycemic index, organic priority, category, phases. You can edit all of it.',
+  },
 
   // Planner / shopping list
   this_week: { fr: 'Cette semaine', en: 'This week' },
@@ -94,6 +102,7 @@ export const STRINGS = {
   shopping_list: { fr: 'Liste de courses', en: 'Shopping list' },
   remove: { fr: 'Retirer', en: 'Remove' },
   empty_week: { fr: 'Aucune recette sélectionnée pour la semaine.', en: 'No recipes picked for the week yet.' },
+  empty_shopping_list: { fr: 'Pas encore de liste de courses. Génère-la depuis "Cette semaine".', en: 'No shopping list yet. Generate it from "This week".' },
   clear_checked: { fr: 'Effacer les cases cochées', en: 'Clear checked items' },
   move_to_aisle: { fr: 'Déplacer vers…', en: 'Move to aisle…' },
 

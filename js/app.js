@@ -1,14 +1,16 @@
-import { boot, state } from './store.js';
+import { boot, state, subscribe } from './store.js';
 import { route, setNotFound, startRouter, render } from './router.js';
 import { t, setLang, onLangChange } from './i18n.js';
 import { applyCycleModeClass, refreshStaticText } from './ui.js';
+import { mountPhasePicker, renderPhasePicker } from './phase-picker.js';
 
 import { renderGallery } from './views/gallery.js';
 import { renderRecipeDetail } from './views/recipe-detail.js';
 import { renderRecipeEditor } from './views/recipe-editor.js';
 import { renderPhases } from './views/phases.js';
 import { renderFoods } from './views/foods.js';
-import { renderPlanner } from './views/planner.js';
+import { renderWeek } from './views/week.js';
+import { renderShopping } from './views/shopping.js';
 import { renderImport } from './views/import.js';
 import { renderSettings } from './views/settings.js';
 
@@ -31,6 +33,8 @@ async function main() {
   applyCycleModeClass();
   refreshStaticText();
   await setupBookmarklet();
+  mountPhasePicker();
+  subscribe(() => { applyCycleModeClass(); renderPhasePicker(); });
 
   onLangChange(() => { refreshStaticText(); render(); });
 
@@ -41,7 +45,8 @@ async function main() {
   route('/phases', renderPhases);
   route('/phases/:id', renderPhases);
   route('/foods', renderFoods);
-  route('/planner', renderPlanner);
+  route('/week', renderWeek);
+  route('/shopping', renderShopping);
   route('/import', renderImport);
   route('/settings', renderSettings);
   setNotFound(() => `<div class="empty-state">${t('no_recipes')}</div>`);

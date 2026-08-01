@@ -52,7 +52,79 @@ p { line-height: 1.5; }
 .topnav { display: flex; gap: 1.1rem; flex: 1; }
 .topnav a { color: var(--text-muted); font-size: 0.92rem; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
 .topnav a.active { color: var(--text); border-color: var(--accent); }
-.add-btn { margin-left: auto; }
+
+.topbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
+.icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 2.2rem; height: 2.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.icon-btn:hover { border-color: var(--accent); }
+.icon-btn.active { border-color: var(--accent); }
+
+.phase-picker { position: relative; }
+.phase-picker-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.phase-picker-btn:hover { border-color: var(--accent); }
+.phase-picker-btn .chevron { color: var(--text-muted); font-size: 0.75rem; }
+.phase-picker-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  min-width: 180px;
+  padding: 0.3rem;
+  z-index: 20;
+}
+.phase-picker-option {
+  display: flex; align-items: center; gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+.phase-picker-option:hover { background: #f1efe9; }
+.phase-picker-option.active { font-weight: 600; }
+.phase-picker-option .check { margin-left: auto; color: var(--accent); }
+
+.fab {
+  position: fixed;
+  right: 1.2rem;
+  bottom: calc(1.2rem + env(safe-area-inset-bottom));
+  width: 3.4rem; height: 3.4rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  line-height: 1;
+  box-shadow: var(--shadow);
+  z-index: 15;
+}
+.fab:hover { opacity: 0.92; }
 
 main#view { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 1.25rem 1.25rem 4rem; }
 
@@ -222,7 +294,12 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0; }
    component rules above at equal specificity. */
 @media (max-width: 760px) {
   .topnav { display: none; }
-  .add-btn { display: none; }
+  .topbar { padding: 0.7rem 0.8rem; gap: 0.5rem; }
+  .brand { font-size: 0.92rem; white-space: nowrap; }
+  .topbar-actions { flex-shrink: 0; gap: 0.35rem; }
+  .phase-picker-btn { padding: 0.35rem 0.55rem; font-size: 0.78rem; }
+  .icon-btn { width: 2rem; height: 2rem; font-size: 0.9rem; }
+  .fab { bottom: calc(4.6rem + env(safe-area-inset-bottom)); right: 1rem; width: 3.1rem; height: 3.1rem; font-size: 1.6rem; }
   .bottomnav {
     display: flex;
     justify-content: space-around;
