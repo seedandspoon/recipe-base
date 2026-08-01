@@ -1,9 +1,13 @@
-import { state } from '../store.js';
+import { state, setWeekPlanEntry } from '../store.js';
 import { t } from '../i18n.js';
 import { normalize } from '../matcher.js';
 import { scoreRecipeForPhase } from '../match-score.js';
 import { uniqueSorted, escapeHtml } from '../utils.js';
-import { MEAL_TYPES, SEASONS, DIFFICULTIES, STATUSES, recipeCardHtml, optionList } from './shared.js';
+import { toast } from '../toast.js';
+import {
+  MEAL_TYPES, MEAL_TYPE_ICONS, MEAL_TYPE_ICON_FALLBACK,
+  SEASONS, DIFFICULTIES, STATUSES, recipeCardHtml, optionList,
+} from './shared.js';
 
 const filters = {
   q: '',
@@ -74,6 +78,7 @@ export async function renderGallery({ query: routeQuery } = {}) {
 
   const { list, currentPhaseId } = applyFilters();
   const groups = groupByMealType(list);
+  const weekRecipeIds = new Set(state.weekPlan.map((w) => w.recipeId));
 
   const mealTypeOrder = MEAL_TYPES.filter((m) => groups.has(m)).concat(
     [...groups.keys()].filter((k) => !MEAL_TYPES.includes(k))
@@ -100,14 +105,16 @@ export async function renderGallery({ query: routeQuery } = {}) {
       </div>
     </div>
     <div id="gallery-results">
-      ${list.length === 0 ? `<div class="empty-state">${t('no_recipes')}</div>` : mealTypeOrder.map((key) => `
+      ${list.length === 0 ? `<div class="empty-state">${t('no_recipes')}</div>` : `
+        <p class="small muted">${t('all_recipes_count')} <strong>${list.length}</strong> ${t('of_total')} <strong>${state.recipes.length}</strong></p>
+        ${mealTypeOrder.map((key) => `
         <div class="meal-group">
-          <h2>${MEAL_TYPES.includes(key) ? t(`meal_${key}`) : escapeHtml(key)}</h2>
+          <h2>${MEAL_TYPES.includes(key) ? MEAL_TYPE_ICONS[key] : MEAL_TYPE_ICON_FALLBACK} ${MEAL_TYPES.includes(key) ? t(`meal_${key}`) : escapeHtml(key)} <span class="muted">${groups.get(key).length}</span></h2>
           <div class="recipe-grid">
-            ${groups.get(key).map((r) => recipeCardHtml(r, { currentPhaseId, foods: state.foods })).join('')}
+            ${groups.get(key).map((r) => recipeCardHtml(r, { currentPhaseId, foods: state.foods, inWeek: weekRecipeIds.has(r.id) })).join('')}
           </div>
         </div>
-      `).join('')}
+      `).join('')}`}
     </div>
   `;
 
@@ -134,4 +141,15 @@ export async function renderGallery({ query: routeQuery } = {}) {
     document.getElementById('f-q').focus();
     history.replaceState(null, '', '#/gallery');
   }
+
+  document.querySelectorAll('[data-quick-add]').forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const recipeId = btn.dataset.quickAdd;
+      const recipe = state.recipes.find((r) => r.id === recipeId);
+      await setWeekPlanEntry(recipeId, recipe.servings || 1);
+      toast(t('quick_add_to_week') + ' ✓');
+      renderGallery({ query: routeQuery });
+    });
+  });
 }
