@@ -98,9 +98,9 @@ function foodRowHtml(f) {
   return `
     <tr data-food-row="${f.id}">
       <td>${escapeHtml(f.name_fr)} / ${escapeHtml(f.name_en)}</td>
-      <td>${escapeHtml(f.category || '')}</td>
+      <td>${f.category ? t(`category_${f.category}`) : ''}</td>
       <td>${phaseInitials}</td>
-      <td>${f.gi.level === 'na' ? t('gi_not_applicable') : `${f.gi.value ?? ''} (${t(`difficulty_${f.gi.level === 'high' ? 'hard' : f.gi.level}`)})`}</td>
+      <td>${f.gi.level === 'na' ? t('gi_not_applicable') : `${f.gi.value ?? ''} (${t(`gi_${f.gi.level}`)})`}</td>
       <td>${f.organic.level === 'na' ? t('organic_na') : f.organic.level === 'high' ? t('organic_high') : t('organic_low')}</td>
       <td>${t(`aisle_${f.aisle}`)}</td>
       <td class="filter-row">
@@ -135,7 +135,7 @@ function foodFormHtml(f) {
         </div>
       </div>
       <div class="field-row">
-        <div class="field"><label>${t('glycemic_index')}</label><select id="ff-gi-level">${GI_LEVELS.map((l) => `<option value="${l}" ${l===f.gi.level?'selected':''}>${l === 'na' ? t('gi_not_applicable') : t(`difficulty_${l==='high'?'hard':l}`)}</option>`).join('')}</select></div>
+        <div class="field"><label>${t('glycemic_index')}</label><select id="ff-gi-level">${GI_LEVELS.map((l) => `<option value="${l}" ${l===f.gi.level?'selected':''}>${l === 'na' ? t('gi_not_applicable') : t(`gi_${l}`)}</option>`).join('')}</select></div>
         <div class="field"><label>Valeur IG (0-100)</label><input id="ff-gi-value" type="number" min="0" max="100" value="${f.gi.value ?? ''}" /></div>
         <div class="field"><label>${t('organic_priority')}</label><select id="ff-organic">${ORGANIC_LEVELS.map((l) => `<option value="${l}" ${l===f.organic.level?'selected':''}>${l==='na'?t('organic_na'):l==='high'?t('organic_high'):t('organic_low')}</option>`).join('')}</select></div>
       </div>
@@ -150,7 +150,7 @@ function bindFoodForm(form) {
   // category select needs plain options (optionList expects i18n keys); build manually instead
   const categorySelect = document.getElementById('ff-category');
   const currentCategory = form.dataset.id ? state.foods.find((f) => f.id === form.dataset.id)?.category : 'vegetable';
-  categorySelect.innerHTML = FOOD_CATEGORIES.map((c) => `<option value="${c}" ${c===currentCategory?'selected':''}>${c}</option>`).join('');
+  categorySelect.innerHTML = FOOD_CATEGORIES.map((c) => `<option value="${c}" ${c===currentCategory?'selected':''}>${t(`category_${c}`)}</option>`).join('');
 
   document.getElementById('ff-cancel').addEventListener('click', () => { editingId = null; creating = false; paint(); });
 

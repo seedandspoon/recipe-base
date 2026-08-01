@@ -116,6 +116,10 @@ export async function renderRecipeDetail({ params }) {
 
   document.getElementById('add-week-btn').addEventListener('click', async () => {
     const portions = Number(document.getElementById('portions-input').value) || 0;
+    if (portions <= 0) {
+      toast(t('portions_to_cook') + ' ?');
+      return;
+    }
     await setWeekPlanEntry(recipe.id, portions);
     toast(t('add_to_week') + ' ✓');
     renderRecipeDetail({ params });

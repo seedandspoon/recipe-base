@@ -14,6 +14,10 @@ export async function renderImport({ query }) {
     await handleWebImport(query.data);
     return;
   }
+  // Always land on the method chooser on a fresh visit to this page —
+  // "manual" is an immediate action (see bindTabs), never a sticky tab.
+  activeTab = 'web';
+  batchItems = null;
   paint();
 }
 
@@ -23,18 +27,27 @@ function paint() {
     <div class="import-tabs">
       <button class="import-tab ${activeTab==='web'?'active':''}" data-tab="web">${t('import_from_web')}</button>
       <button class="import-tab ${activeTab==='paste'?'active':''}" data-tab="paste">${t('import_paste')}</button>
-      <button class="import-tab ${activeTab==='manual'?'active':''}" data-tab="manual">${t('import_manual')}</button>
+      <button class="import-tab" data-tab="manual">${t('import_manual')}</button>
       <button class="import-tab ${activeTab==='batch'?'active':''}" data-tab="batch">${t('import_batch')}</button>
     </div>
     <div id="import-panel"></div>
   `;
   document.querySelectorAll('[data-tab]').forEach((btn) => {
-    btn.addEventListener('click', () => { activeTab = btn.dataset.tab; paint(); });
+    btn.addEventListener('click', () => {
+      if (btn.dataset.tab === 'manual') {
+        // Manual entry is an immediate action, not a tab to switch into —
+        // it must never become the page's "current" state (see renderImport).
+        window.__importDraft = null;
+        go('/recipe/new');
+        return;
+      }
+      activeTab = btn.dataset.tab;
+      paint();
+    });
   });
   const panel = document.getElementById('import-panel');
   if (activeTab === 'web') panel.innerHTML = webTabHtml();
   if (activeTab === 'paste') panel.innerHTML = pasteTabHtml();
-  if (activeTab === 'manual') { manualTab(); return; }
   if (activeTab === 'batch') panel.innerHTML = batchTabHtml();
   bindPanel();
 }
@@ -83,11 +96,6 @@ function batchTabHtml() {
       <button class="btn btn-primary mt-1" id="batch-import-btn">${t('import')} (${includedCount})</button>
       <button class="btn mt-1" id="batch-cancel-btn">${t('cancel')}</button>
     </div>`;
-}
-
-function manualTab() {
-  window.__importDraft = null;
-  go('/recipe/new');
 }
 
 function bindPanel() {

@@ -155,6 +155,26 @@ export const STRINGS = {
   all: { fr: 'Tous', en: 'All' },
   all_fem: { fr: 'Toutes', en: 'All' },
   any: { fr: 'Indifférent', en: 'Any' },
+
+  // Food categories (page Aliments)
+  category_vegetable: { fr: 'Légume', en: 'Vegetable' },
+  category_fruit: { fr: 'Fruit', en: 'Fruit' },
+  category_legume: { fr: 'Légumineuse', en: 'Legume' },
+  category_grain: { fr: 'Céréale', en: 'Grain' },
+  category_meat: { fr: 'Viande', en: 'Meat' },
+  category_fish: { fr: 'Poisson', en: 'Fish' },
+  category_dairy: { fr: 'Produit laitier', en: 'Dairy' },
+  category_protein: { fr: 'Protéine', en: 'Protein' },
+  category_seed: { fr: 'Graine', en: 'Seed' },
+  category_nut: { fr: 'Noix', en: 'Nut' },
+  category_spice: { fr: 'Épice', en: 'Spice' },
+  category_fat: { fr: 'Matière grasse', en: 'Fat' },
+  category_pantry: { fr: 'Épicerie', en: 'Pantry' },
+
+  // Glycemic index levels — dedicated labels (not the "difficulty" ones)
+  gi_low: { fr: 'Bas', en: 'Low' },
+  gi_medium: { fr: 'Moyen', en: 'Medium' },
+  gi_high: { fr: 'Élevé', en: 'High' },
 };
 
 const listeners = new Set();
