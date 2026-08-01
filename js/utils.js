@@ -112,6 +112,19 @@ export function scaleIngredient(ingredient, factor) {
   return { ...ingredient, quantity: formatQuantity(qty * factor) };
 }
 
+// Recipe steps are stored as sections: [{ title, items: [...] }]. Older
+// recipes (and simple imports) may still have a flat array of strings —
+// treat that as a single untitled section rather than migrating stored
+// data, so nothing breaks on read.
+export function normalizeStepSections(steps) {
+  if (!steps || steps.length === 0) return [];
+  if (typeof steps[0] === 'object' && steps[0] !== null && 'items' in steps[0]) {
+    return steps;
+  }
+  const items = steps.filter(Boolean);
+  return items.length ? [{ title: '', items }] : [];
+}
+
 export function uniqueSorted(values) {
   return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b));
 }

@@ -289,8 +289,13 @@ legend { padding: 0 0.4rem; font-weight: 600; font-size: 0.9rem; }
 .ingredient-list input[type=checkbox] { width: auto; }
 .ingredient-list .qty { color: var(--text-muted); min-width: 90px; }
 .allergen-flag { color: var(--danger); font-size: 0.75rem; border: 1px solid var(--danger); border-radius: 999px; padding: 0 0.4rem; }
+.recognized-flag { color: var(--phase-follicular); font-size: 0.85rem; }
 .steps-list { padding-left: 1.2rem; }
 .steps-list li { margin-bottom: 0.7rem; line-height: 1.5; }
+.step-section { border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; margin-bottom: 0.8rem; background: #fbfaf8; }
+.step-section .step-items { list-style: none; padding: 0; margin: 0.5rem 0; }
+.recipe-steps-section { margin-bottom: 1.4rem; }
+.recipe-steps-section h4 { font-size: 0.9rem; margin: 0 0 0.5rem; }
 .section { margin: 1.6rem 0; }
 .section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
 

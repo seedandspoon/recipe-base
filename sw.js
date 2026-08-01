@@ -1,6 +1,6 @@
 // Minimal offline cache for the app shell. Static, no build step —
 // bump CACHE_NAME whenever you want clients to fetch fresh files.
-const CACHE_NAME = 'recipe-book-v1';
+const CACHE_NAME = 'recipe-book-v2';
 
 const PRECACHE_URLS = [
   './',
@@ -17,13 +17,15 @@ const PRECACHE_URLS = [
   'js/toast.js',
   'js/ui.js',
   'js/utils.js',
+  'js/phase-picker.js',
   'js/views/shared.js',
   'js/views/gallery.js',
   'js/views/recipe-detail.js',
   'js/views/recipe-editor.js',
   'js/views/phases.js',
   'js/views/foods.js',
-  'js/views/planner.js',
+  'js/views/week.js',
+  'js/views/shopping.js',
   'js/views/import.js',
   'js/views/settings.js',
   'data/seed-foods.json',

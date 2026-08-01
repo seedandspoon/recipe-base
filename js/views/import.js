@@ -186,9 +186,12 @@ async function handleWebImport(encoded) {
       prepTime: payload.prepTime || '',
       cookTime: payload.cookTime || '',
       servings: payload.servings || 4,
-      nutrition: { calories: '', protein_g: '', carbs_g: '', fat_g: '' },
+      nutrition: {
+        calories: '', protein_g: '', carbs_g: '', sugars_g: '', fat_g: '', saturates_g: '', fiber_g: '',
+        ...(payload.nutrition || {}),
+      },
       ingredients: (payload.ingredients && payload.ingredients.length) ? payload.ingredients : [{ name: '', quantity: '', unit: '', allergen: false }],
-      steps: (payload.steps && payload.steps.length) ? payload.steps : [''],
+      steps: (payload.steps && payload.steps.length) ? payload.steps : [{ title: '', items: [''] }],
       status: 'active',
     };
     startEditorWithDraft(draft);
@@ -217,7 +220,7 @@ function parseIngredientLine(rawLine) {
 export function parsePastedText(text) {
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   if (lines.length === 0) {
-    return { title: '', description: '', source: '', ingredients: [{ name: '', quantity: '', unit: '', allergen: false }], steps: [''] };
+    return { title: '', description: '', source: '', ingredients: [{ name: '', quantity: '', unit: '', allergen: false }], steps: [{ title: '', items: [''] }] };
   }
   const title = lines[0];
   let section = 'preamble';
@@ -252,9 +255,9 @@ export function parsePastedText(text) {
     prepTime: '',
     cookTime: '',
     servings: 4,
-    nutrition: { calories: '', protein_g: '', carbs_g: '', fat_g: '' },
+    nutrition: { calories: '', protein_g: '', carbs_g: '', sugars_g: '', fat_g: '', saturates_g: '', fiber_g: '' },
     ingredients: ingredients.length ? ingredients : [{ name: '', quantity: '', unit: '', allergen: false }],
-    steps: steps.length ? steps : [''],
+    steps: [{ title: '', items: steps.length ? steps : [''] }],
     status: 'active',
   };
 }

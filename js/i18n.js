@@ -54,6 +54,7 @@ export const STRINGS = {
   ingredients: { fr: 'Ingrédients', en: 'Ingredients' },
   steps: { fr: 'Étapes', en: 'Steps' },
   allergen: { fr: 'Allergène', en: 'Allergen' },
+  ingredient_recognized: { fr: 'Ingrédient reconnu', en: 'Ingredient recognized' },
   photo: { fr: 'Photo', en: 'Photo' },
   edit: { fr: 'Modifier', en: 'Edit' },
   save: { fr: 'Enregistrer', en: 'Save' },
@@ -63,6 +64,15 @@ export const STRINGS = {
   minutes: { fr: 'min', en: 'min' },
   add_ingredient: { fr: 'Ajouter un ingrédient', en: 'Add ingredient' },
   add_step: { fr: 'Ajouter une étape', en: 'Add step' },
+  add_step_section: { fr: 'Ajouter une section', en: 'Add a section' },
+  step_section: { fr: 'la section', en: 'the section' },
+  step_section_title_placeholder: { fr: 'Titre de la section (optionnel)', en: 'Section title (optional)' },
+  protein_label: { fr: 'Protéines', en: 'Protein' },
+  fat_label: { fr: 'Lipides', en: 'Fat' },
+  saturates_label: { fr: 'dont saturés', en: 'of which saturates' },
+  carbs_label: { fr: 'Glucides', en: 'Carbs' },
+  sugars_label: { fr: 'dont sucres', en: 'of which sugars' },
+  fiber_label: { fr: 'Fibres', en: 'Fiber' },
   confirm_delete_recipe: { fr: 'Supprimer cette recette ?', en: 'Delete this recipe?' },
 
   // Phases

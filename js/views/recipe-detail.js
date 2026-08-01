@@ -1,10 +1,9 @@
 import { state, deleteRecipe, setWeekPlanEntry } from '../store.js';
 import { t } from '../i18n.js';
 import { go } from '../router.js';
-import { escapeHtml } from '../utils.js';
+import { escapeHtml, normalizeStepSections } from '../utils.js';
 import { stars, matchBadge } from './shared.js';
 import { matchIngredients } from '../matcher.js';
-import { scoreRecipeForPhase } from '../match-score.js';
 import { toast } from '../toast.js';
 
 const checkedIngredients = new Set();
@@ -20,14 +19,8 @@ export async function renderRecipeDetail({ params }) {
   const foodById = new Map(state.foods.map((f) => [f.id, f]));
   const matched = matchIngredients(recipe.ingredients || [], state.foods);
   const weekEntry = state.weekPlan.find((w) => w.recipeId === recipe.id);
-
-  let matchDetail = '';
-  if (currentPhaseId) {
-    const res = scoreRecipeForPhase(recipe, currentPhaseId, state.foods);
-    if (res.score !== null) {
-      matchDetail = `<p class="small muted">${res.favoredCount}/${res.matchedCount} ${t('ingredients').toLowerCase()} ${t('favored_foods').toLowerCase()} (${t(`phase_${currentPhaseId}`)}).</p>`;
-    }
-  }
+  const stepSections = normalizeStepSections(recipe.steps);
+  const n = recipe.nutrition || {};
 
   document.getElementById('view').innerHTML = `
     ${recipe.photo ? `<img class="recipe-header-photo" src="${recipe.photo}" alt="">` : ''}
@@ -39,7 +32,6 @@ export async function renderRecipeDetail({ params }) {
           ${recipe.status !== 'active' ? `<span class="badge badge-status-${recipe.status}">${t(`status_${recipe.status}`)}</span>` : ''}
           ${(recipe.tags || []).map((tg) => `<span class="badge">${escapeHtml(tg)}</span>`).join('')}
         </div>
-        ${matchDetail}
       </div>
       <div class="filter-row">
         <a class="btn" href="#/recipe/${recipe.id}/edit">${t('edit')}</a>
@@ -59,25 +51,25 @@ export async function renderRecipeDetail({ params }) {
     </div>
 
     <div class="card">
-      <div class="flex-between">
-        <label style="margin:0;">${t('add_to_week')}</label>
-      </div>
-      <div class="filter-row mt-1">
-        <input id="portions-input" type="number" min="0" style="width:90px;" value="${weekEntry ? weekEntry.portions : ''}" placeholder="${t('portions_to_cook')}" />
-        <button class="btn btn-primary btn-small" id="add-week-btn">${t('add_to_week')}</button>
-        ${weekEntry ? `<span class="small muted">${t('portions_to_cook')}: ${weekEntry.portions}</span>` : ''}
-      </div>
+      ${weekEntry
+        ? `<div class="flex-between">
+            <span>${t('already_in_week')} — ${t('portions_to_cook')}: <strong>${weekEntry.portions}</strong></span>
+            <a class="btn btn-small" href="#/week">${t('nav_week')}</a>
+          </div>`
+        : `<button class="btn btn-primary" id="add-week-btn">🗓️ ${t('quick_add_to_week')}</button>`}
     </div>
 
+    ${hasAnyNutrition(n) ? `
     <div class="section">
       <h3>${t('nutrition')}</h3>
       <div class="filter-row">
-        ${recipe.nutrition?.calories ? `<span class="badge">${recipe.nutrition.calories} kcal</span>` : ''}
-        ${recipe.nutrition?.protein_g ? `<span class="badge">${recipe.nutrition.protein_g} g protéines</span>` : ''}
-        ${recipe.nutrition?.carbs_g ? `<span class="badge">${recipe.nutrition.carbs_g} g glucides</span>` : ''}
-        ${recipe.nutrition?.fat_g ? `<span class="badge">${recipe.nutrition.fat_g} g lipides</span>` : ''}
+        ${n.calories ? `<span class="badge">${n.calories} kcal</span>` : ''}
+        ${n.protein_g ? `<span class="badge">${n.protein_g} g ${t('protein_label').toLowerCase()}</span>` : ''}
+        ${n.fat_g ? `<span class="badge">${n.fat_g} g ${t('fat_label').toLowerCase()}${n.saturates_g ? ` (${n.saturates_g} g ${t('saturates_label')})` : ''}</span>` : ''}
+        ${n.carbs_g ? `<span class="badge">${n.carbs_g} g ${t('carbs_label').toLowerCase()}${n.sugars_g ? ` (${n.sugars_g} g ${t('sugars_label')})` : ''}</span>` : ''}
+        ${n.fiber_g ? `<span class="badge">${n.fiber_g} g ${t('fiber_label').toLowerCase()}</span>` : ''}
       </div>
-    </div>
+    </div>` : ''}
 
     <div class="section">
       <h3>${t('ingredients')}</h3>
@@ -85,6 +77,7 @@ export async function renderRecipeDetail({ params }) {
         ${(recipe.ingredients || []).map((ing, i) => {
           const m = matched[i];
           const food = m && m.foodId ? foodById.get(m.foodId) : null;
+          const recognized = !!food;
           const favored = food && currentPhaseId && (food.phases || []).includes(currentPhaseId);
           return `
             <li>
@@ -92,7 +85,8 @@ export async function renderRecipeDetail({ params }) {
               <span class="qty">${escapeHtml(ing.quantity || '')} ${escapeHtml(ing.unit || '')}</span>
               <span style="flex:1;">${escapeHtml(ing.name)}</span>
               ${ing.allergen ? `<span class="allergen-flag">${t('allergen')}</span>` : ''}
-              ${favored ? `<span class="badge badge-phase-${currentPhaseId}">✓</span>` : ''}
+              ${recognized ? `<span class="recognized-flag" title="${t('ingredient_recognized')}">✓</span>` : ''}
+              ${favored ? `<span class="badge badge-phase-${currentPhaseId}">${t(`phase_${currentPhaseId}`)}</span>` : ''}
             </li>`;
         }).join('')}
       </ul>
@@ -100,9 +94,14 @@ export async function renderRecipeDetail({ params }) {
 
     <div class="section">
       <h3>${t('steps')}</h3>
-      <ol class="steps-list">
-        ${(recipe.steps || []).map((s) => `<li>${escapeHtml(s)}</li>`).join('')}
-      </ol>
+      ${stepSections.map((section) => `
+        <div class="recipe-steps-section">
+          ${section.title ? `<h4>${escapeHtml(section.title)}</h4>` : ''}
+          <ol class="steps-list">
+            ${section.items.map((s) => `<li>${escapeHtml(s)}</li>`).join('')}
+          </ol>
+        </div>
+      `).join('')}
     </div>
   `;
 
@@ -114,16 +113,14 @@ export async function renderRecipeDetail({ params }) {
     }
   });
 
-  document.getElementById('add-week-btn').addEventListener('click', async () => {
-    const portions = Number(document.getElementById('portions-input').value) || 0;
-    if (portions <= 0) {
-      toast(t('portions_to_cook') + ' ?');
-      return;
-    }
-    await setWeekPlanEntry(recipe.id, portions);
-    toast(t('add_to_week') + ' ✓');
-    renderRecipeDetail({ params });
-  });
+  const addWeekBtn = document.getElementById('add-week-btn');
+  if (addWeekBtn) {
+    addWeekBtn.addEventListener('click', async () => {
+      await setWeekPlanEntry(recipe.id, recipe.servings || 1);
+      toast(t('quick_add_to_week') + ' ✓');
+      renderRecipeDetail({ params });
+    });
+  }
 
   document.querySelectorAll('[data-check-ing]').forEach((cb) => {
     cb.addEventListener('change', () => {
@@ -131,4 +128,8 @@ export async function renderRecipeDetail({ params }) {
       if (cb.checked) checkedIngredients.add(i); else checkedIngredients.delete(i);
     });
   });
+}
+
+function hasAnyNutrition(n) {
+  return !!(n.calories || n.protein_g || n.fat_g || n.carbs_g || n.fiber_g);
 }

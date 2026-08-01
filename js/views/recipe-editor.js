@@ -1,20 +1,24 @@
 import { state, saveRecipe } from '../store.js';
 import { t } from '../i18n.js';
 import { go } from '../router.js';
-import { escapeHtml, readFileAsDataURL, resizeImageDataUrl } from '../utils.js';
+import { escapeHtml, readFileAsDataURL, resizeImageDataUrl, normalizeStepSections } from '../utils.js';
 import { MEAL_TYPES, SEASONS, DIFFICULTIES, STATUSES, optionList } from './shared.js';
 import { toast } from '../toast.js';
 
 let draft = null; // working copy of the recipe being edited
+
+function emptyNutrition() {
+  return { calories: '', protein_g: '', carbs_g: '', sugars_g: '', fat_g: '', saturates_g: '', fiber_g: '' };
+}
 
 function emptyRecipe() {
   return {
     id: null, title: '', photo: '', description: '', source: '',
     tags: [], mealType: 'dinner', cuisine: '', season: 'any', difficulty: 'easy',
     rating: 0, prepTime: '', cookTime: '', servings: 4,
-    nutrition: { calories: '', protein_g: '', carbs_g: '', fat_g: '' },
+    nutrition: emptyNutrition(),
     ingredients: [{ name: '', quantity: '', unit: '', allergen: false }],
-    steps: [''],
+    steps: [{ title: '', items: [''] }],
     status: 'active',
   };
 }
@@ -23,9 +27,10 @@ export async function renderRecipeEditor({ params }) {
   const existing = params.id ? state.recipes.find((r) => r.id === params.id) : null;
   draft = existing ? JSON.parse(JSON.stringify(existing)) : (window.__importDraft || emptyRecipe());
   window.__importDraft = null;
-  if (!draft.nutrition) draft.nutrition = { calories: '', protein_g: '', carbs_g: '', fat_g: '' };
+  draft.nutrition = { ...emptyNutrition(), ...(draft.nutrition || {}) };
   if (!draft.ingredients || draft.ingredients.length === 0) draft.ingredients = [{ name: '', quantity: '', unit: '', allergen: false }];
-  if (!draft.steps || draft.steps.length === 0) draft.steps = [''];
+  draft.steps = normalizeStepSections(draft.steps);
+  if (draft.steps.length === 0) draft.steps = [{ title: '', items: [''] }];
 
   paint();
 }
@@ -103,11 +108,15 @@ function paint() {
 
       <fieldset>
         <legend>${t('nutrition')}</legend>
+        <p class="small muted" style="margin-top:-0.4rem;">${document.documentElement.lang === 'en' ? 'All optional — per portion.' : 'Tout est facultatif — par portion.'}</p>
         <div class="field-row">
-          <div class="field"><label>Calories</label><input id="rf-cal" type="number" min="0" value="${draft.nutrition.calories}" /></div>
-          <div class="field"><label>Protéines (g)</label><input id="rf-protein" type="number" min="0" value="${draft.nutrition.protein_g}" /></div>
-          <div class="field"><label>Glucides (g)</label><input id="rf-carbs" type="number" min="0" value="${draft.nutrition.carbs_g}" /></div>
-          <div class="field"><label>Lipides (g)</label><input id="rf-fat" type="number" min="0" value="${draft.nutrition.fat_g}" /></div>
+          <div class="field"><label>Calories (kcal)</label><input id="rf-cal" type="number" min="0" value="${draft.nutrition.calories}" /></div>
+          <div class="field"><label>${t('protein_label')} (g)</label><input id="rf-protein" type="number" min="0" value="${draft.nutrition.protein_g}" /></div>
+          <div class="field"><label>${t('fat_label')} (g)</label><input id="rf-fat" type="number" min="0" value="${draft.nutrition.fat_g}" /></div>
+          <div class="field"><label>${t('saturates_label')} (g)</label><input id="rf-sat" type="number" min="0" value="${draft.nutrition.saturates_g}" /></div>
+          <div class="field"><label>${t('carbs_label')} (g)</label><input id="rf-carbs" type="number" min="0" value="${draft.nutrition.carbs_g}" /></div>
+          <div class="field"><label>${t('sugars_label')} (g)</label><input id="rf-sugars" type="number" min="0" value="${draft.nutrition.sugars_g}" /></div>
+          <div class="field"><label>${t('fiber_label')} (g)</label><input id="rf-fiber" type="number" min="0" value="${draft.nutrition.fiber_g}" /></div>
         </div>
       </fieldset>
 
@@ -122,9 +131,9 @@ function paint() {
       <fieldset>
         <legend>${t('steps')}</legend>
         <div id="rf-steps">
-          ${draft.steps.map((s, i) => stepRowHtml(s, i)).join('')}
+          ${draft.steps.map((section, si) => stepSectionHtml(section, si)).join('')}
         </div>
-        <button type="button" class="btn btn-small" id="rf-add-step">+ ${t('add_step')}</button>
+        <button type="button" class="btn btn-small" id="rf-add-section">+ ${t('add_step_section')}</button>
       </fieldset>
 
       <div class="flex-between mt-1">
@@ -150,13 +159,28 @@ function ingredientRowHtml(ing, i) {
     </div>`;
 }
 
-function stepRowHtml(s, i) {
+function stepSectionHtml(section, si) {
   return `
-    <div class="field-row" style="align-items:flex-start;">
-      <span class="muted" style="padding-top:0.5rem;min-width:1.4rem;">${i + 1}.</span>
-      <div class="field" style="flex:1;"><textarea rows="2" data-step="${i}">${escapeHtml(s)}</textarea></div>
-      <button type="button" class="btn btn-small" data-remove-step="${i}">✕</button>
+    <div class="step-section" data-section="${si}">
+      <div class="field-row" style="align-items:center;">
+        <div class="field" style="flex:1;">
+          <input data-section-title="${si}" placeholder="${t('step_section_title_placeholder')}" value="${escapeHtml(section.title || '')}" />
+        </div>
+        <button type="button" class="btn btn-small" data-remove-section="${si}">✕ ${t('step_section')}</button>
+      </div>
+      <ol class="step-items">
+        ${section.items.map((s, ii) => stepRowHtml(s, si, ii)).join('')}
+      </ol>
+      <button type="button" class="btn btn-small" data-add-step="${si}">+ ${t('add_step')}</button>
     </div>`;
+}
+
+function stepRowHtml(s, si, ii) {
+  return `
+    <li class="field-row" style="align-items:flex-start;">
+      <div class="field" style="flex:1;"><textarea rows="2" data-step-section="${si}" data-step-index="${ii}">${escapeHtml(s)}</textarea></div>
+      <button type="button" class="btn btn-small" data-remove-step-section="${si}" data-remove-step-index="${ii}">✕</button>
+    </li>`;
 }
 
 function readFormIntoDraft() {
@@ -177,36 +201,63 @@ function readFormIntoDraft() {
     calories: document.getElementById('rf-cal').value,
     protein_g: document.getElementById('rf-protein').value,
     carbs_g: document.getElementById('rf-carbs').value,
+    sugars_g: document.getElementById('rf-sugars').value,
     fat_g: document.getElementById('rf-fat').value,
+    saturates_g: document.getElementById('rf-sat').value,
+    fiber_g: document.getElementById('rf-fiber').value,
   };
 }
 
 function bindEvents() {
   document.getElementById('rf-cancel').addEventListener('click', () => history.back());
 
+  // Any button that restructures the form (add/remove a row or section)
+  // repaints the whole form from `draft` — so it must capture whatever's
+  // currently typed in the plain fields first, or that text would be lost.
+  const mutate = (fn) => { readFormIntoDraft(); fn(); paint(); };
+
   document.getElementById('rf-add-ingredient').addEventListener('click', () => {
-    draft.ingredients.push({ name: '', quantity: '', unit: '', allergen: false });
-    paint();
+    mutate(() => draft.ingredients.push({ name: '', quantity: '', unit: '', allergen: false }));
   });
-  document.getElementById('rf-add-step').addEventListener('click', () => {
-    draft.steps.push('');
-    paint();
+
+  document.getElementById('rf-add-section').addEventListener('click', () => {
+    mutate(() => draft.steps.push({ title: '', items: [''] }));
   });
 
   document.querySelectorAll('[data-remove-ingredient]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const i = Number(btn.dataset.removeIngredient);
-      draft.ingredients.splice(i, 1);
-      if (draft.ingredients.length === 0) draft.ingredients.push({ name: '', quantity: '', unit: '', allergen: false });
-      paint();
+      mutate(() => {
+        const i = Number(btn.dataset.removeIngredient);
+        draft.ingredients.splice(i, 1);
+        if (draft.ingredients.length === 0) draft.ingredients.push({ name: '', quantity: '', unit: '', allergen: false });
+      });
     });
   });
-  document.querySelectorAll('[data-remove-step]').forEach((btn) => {
+
+  document.querySelectorAll('[data-remove-section]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const i = Number(btn.dataset.removeStep);
-      draft.steps.splice(i, 1);
-      if (draft.steps.length === 0) draft.steps.push('');
-      paint();
+      mutate(() => {
+        const si = Number(btn.dataset.removeSection);
+        draft.steps.splice(si, 1);
+        if (draft.steps.length === 0) draft.steps.push({ title: '', items: [''] });
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-add-step]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      mutate(() => draft.steps[Number(btn.dataset.addStep)].items.push(''));
+    });
+  });
+
+  document.querySelectorAll('[data-remove-step-section]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      mutate(() => {
+        const si = Number(btn.dataset.removeStepSection);
+        const ii = Number(btn.dataset.removeStepIndex);
+        draft.steps[si].items.splice(ii, 1);
+        if (draft.steps[si].items.length === 0) draft.steps[si].items.push('');
+      });
     });
   });
 
@@ -217,9 +268,17 @@ function bindEvents() {
       draft.ingredients[i][field] = field === 'allergen' ? input.checked : input.value;
     });
   });
-  document.querySelectorAll('[data-step]').forEach((input) => {
+
+  document.querySelectorAll('[data-section-title]').forEach((input) => {
     input.addEventListener('input', () => {
-      draft.steps[Number(input.dataset.step)] = input.value;
+      draft.steps[Number(input.dataset.sectionTitle)].title = input.value;
+    });
+  });
+  document.querySelectorAll('[data-step-section]').forEach((textarea) => {
+    textarea.addEventListener('input', () => {
+      const si = Number(textarea.dataset.stepSection);
+      const ii = Number(textarea.dataset.stepIndex);
+      draft.steps[si].items[ii] = textarea.value;
     });
   });
 
@@ -227,8 +286,8 @@ function bindEvents() {
     const file = e.target.files[0];
     if (!file) return;
     const dataUrl = await readFileAsDataURL(file);
-    draft.photo = await resizeImageDataUrl(dataUrl);
-    paint();
+    const resized = await resizeImageDataUrl(dataUrl);
+    mutate(() => { draft.photo = resized; });
   });
 
   document.getElementById('recipe-form').addEventListener('submit', async (e) => {
@@ -236,7 +295,9 @@ function bindEvents() {
     readFormIntoDraft();
     if (!draft.title) { toast(t('title') + ' ?'); return; }
     draft.ingredients = draft.ingredients.filter((i) => i.name && i.name.trim());
-    draft.steps = draft.steps.filter((s) => s && s.trim());
+    draft.steps = draft.steps
+      .map((section) => ({ title: (section.title || '').trim(), items: section.items.filter((s) => s && s.trim()) }))
+      .filter((section) => section.items.length > 0);
     const saved = await saveRecipe(draft);
     toast(t('save') + ' ✓');
     go(`/recipe/${saved.id}`);

@@ -21,6 +21,14 @@
     return '';
   }
 
+  // "23 g" / "429 kJ" / 23 -> "23" — nutrition values in JSON-LD are
+  // sometimes plain numbers, sometimes strings with a unit attached.
+  function numFrom(x) {
+    if (x === undefined || x === null || x === '') return '';
+    var m = String(x).match(/[\d.,]+/);
+    return m ? m[0].replace(',', '.') : '';
+  }
+
   function extractRecipeJsonLd() {
     var scripts = document.querySelectorAll('script[type="application/ld+json"]');
     for (var i = 0; i < scripts.length; i += 1) {
@@ -47,24 +55,45 @@
     return { name: String(line), quantity: '', unit: '', allergen: false };
   });
 
-  var steps = [];
+  // Steps become sections [{ title, items }], preserving each
+  // HowToSection's name instead of flattening everything together.
+  var stepSections = [];
   var instr = recipe.recipeInstructions;
   if (Array.isArray(instr)) {
-    instr.forEach(function (s) {
-      if (typeof s === 'string') { steps.push(s); return; }
-      if (s['@type'] === 'HowToSection' && Array.isArray(s.itemListElement)) {
-        s.itemListElement.forEach(function (ss) { steps.push(textOf(ss)); });
-        return;
-      }
-      steps.push(textOf(s));
-    });
+    var hasSections = instr.some(function (s) { return s && s['@type'] === 'HowToSection'; });
+    if (hasSections) {
+      instr.forEach(function (s) {
+        if (s && s['@type'] === 'HowToSection' && Array.isArray(s.itemListElement)) {
+          var items = s.itemListElement.map(textOf).filter(Boolean);
+          if (items.length) stepSections.push({ title: textOf(s.name) || '', items: items });
+        } else {
+          var text = textOf(s);
+          if (text) stepSections.push({ title: '', items: [text] });
+        }
+      });
+    } else {
+      var flatItems = instr.map(function (s) { return typeof s === 'string' ? s : textOf(s); }).filter(Boolean);
+      if (flatItems.length) stepSections.push({ title: '', items: flatItems });
+    }
   } else if (typeof instr === 'string') {
-    steps = instr.split(/\n+/).filter(Boolean);
+    var lines = instr.split(/\n+/).filter(Boolean);
+    if (lines.length) stepSections.push({ title: '', items: lines });
   }
 
   var image = recipe.image;
   if (image && typeof image === 'object' && !Array.isArray(image)) image = image.url;
   if (Array.isArray(image)) image = image[0];
+
+  var rawNutrition = recipe.nutrition || {};
+  var nutrition = {
+    calories: numFrom(rawNutrition.calories),
+    protein_g: numFrom(rawNutrition.proteinContent),
+    fat_g: numFrom(rawNutrition.fatContent),
+    saturates_g: numFrom(rawNutrition.saturatedFatContent),
+    carbs_g: numFrom(rawNutrition.carbohydrateContent),
+    sugars_g: numFrom(rawNutrition.sugarContent),
+    fiber_g: numFrom(rawNutrition.fiberContent),
+  };
 
   var payload = {
     title: textOf(recipe.name),
@@ -77,7 +106,8 @@
     cuisine: textOf(recipe.recipeCuisine),
     tags: recipe.keywords ? String(recipe.keywords).split(',').map(function (s) { return s.trim(); }) : [],
     ingredients: ingredients,
-    steps: steps,
+    steps: stepSections,
+    nutrition: nutrition,
   };
 
   var json = JSON.stringify(payload);
