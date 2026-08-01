@@ -1,0 +1,50 @@
+[
+  {
+    "id": "menstrual",
+    "order": 1,
+    "colorVar": "--phase-menstrual",
+    "duration": { "fr": "Environ les jours 1 à 5 du cycle (le premier jour des règles = jour 1).", "en": "Roughly days 1–5 of the cycle (day 1 = first day of bleeding)." },
+    "hormones": { "fr": "Œstrogène et progestérone sont à leur niveau le plus bas.", "en": "Estrogen and progesterone are both at their lowest point." },
+    "mood": { "fr": "Énergie basse, besoin de repos et d'introspection. C'est normal de ralentir.", "en": "Lower energy, a pull toward rest and introspection. Slowing down is expected here." },
+    "exercise": { "fr": "Mouvement doux : marche, étirements, yoga restauratif. Le repos est aussi une option légitime.", "en": "Gentle movement: walking, stretching, restorative yoga. Rest is a legitimate option too." },
+    "cookingStyle": { "fr": "Plats chauds, réconfortants et faciles à digérer, riches en fer pour compenser les pertes (soupes, ragoûts, bouillons).", "en": "Warm, comforting, easy-to-digest meals rich in iron to help replace what's lost (soups, stews, broths)." },
+    "seedCycling": { "fr": "1 à 2 cuillères à soupe par jour de graines de lin et de courge moulues, à ajouter aux repas.", "en": "1–2 tablespoons a day of ground flax and pumpkin seeds, stirred into meals." },
+    "userNotes": ""
+  },
+  {
+    "id": "follicular",
+    "order": 2,
+    "colorVar": "--phase-follicular",
+    "duration": { "fr": "Environ les jours 6 à 13, entre la fin des règles et l'ovulation.", "en": "Roughly days 6–13, between the end of bleeding and ovulation." },
+    "hormones": { "fr": "L'œstrogène augmente progressivement à mesure qu'un follicule se développe.", "en": "Estrogen rises steadily as a follicle matures." },
+    "mood": { "fr": "L'énergie remonte : optimisme, motivation, esprit créatif.", "en": "Energy returns: optimism, motivation, a creative spark." },
+    "exercise": { "fr": "Bon moment pour augmenter l'intensité : cardio, danse, nouveaux cours, renforcement musculaire.", "en": "A good time to build intensity: cardio, dance, trying new classes, strength training." },
+    "cookingStyle": { "fr": "Plats légers, frais et colorés ; aliments fermentés et germés pour accompagner l'énergie montante.", "en": "Light, fresh, colorful dishes; fermented and sprouted foods to match the rising energy." },
+    "seedCycling": { "fr": "Comme pour la phase menstruelle : 1 à 2 cuillères à soupe par jour de graines de lin et de courge moulues.", "en": "Same as the menstrual phase: 1–2 tablespoons a day of ground flax and pumpkin seeds." },
+    "userNotes": ""
+  },
+  {
+    "id": "ovulatory",
+    "order": 3,
+    "colorVar": "--phase-ovulatory",
+    "duration": { "fr": "Environ les jours 14 à 16, autour de l'ovulation.", "en": "Roughly days 14–16, around ovulation." },
+    "hormones": { "fr": "L'œstrogène atteint son pic ; un pic de LH déclenche l'ovulation, léger pic de testostérone.", "en": "Estrogen peaks; an LH surge triggers ovulation, with a small testosterone bump." },
+    "mood": { "fr": "Énergie et confiance au sommet, envie de socialiser et de communiquer.", "en": "Energy and confidence peak, with a pull toward socializing and communicating." },
+    "exercise": { "fr": "Le corps tolère bien l'intensité : HIIT, cours collectifs, séances de force plus exigeantes.", "en": "The body tolerates intensity well: HIIT, group classes, more demanding strength sessions." },
+    "cookingStyle": { "fr": "Plats légers et riches en fibres (crudités, salades) pour aider à métaboliser le pic d'œstrogène ; aliments anti-inflammatoires.", "en": "Light, fiber-rich dishes (raw vegetables, salads) to help metabolize the estrogen peak; anti-inflammatory foods." },
+    "seedCycling": { "fr": "1 à 2 cuillères à soupe par jour de graines de sésame et de tournesol moulues.", "en": "1–2 tablespoons a day of ground sesame and sunflower seeds." },
+    "userNotes": ""
+  },
+  {
+    "id": "luteal",
+    "order": 4,
+    "colorVar": "--phase-luteal",
+    "duration": { "fr": "Environ les jours 17 à 28, de l'ovulation aux règles suivantes.", "en": "Roughly days 17–28, from ovulation to the next period." },
+    "hormones": { "fr": "La progestérone domine ; l'œstrogène remonte légèrement puis les deux chutent en fin de phase.", "en": "Progesterone is dominant; estrogen has a smaller secondary rise, then both drop toward the end." },
+    "mood": { "fr": "Phase stable et productive au début, puis plus sensible et irritable en approchant des règles (SPM).", "en": "Steady and productive early on, then more sensitive and irritable as the period approaches (PMS)." },
+    "exercise": { "fr": "Intensité modérée : pilates, marche rapide, force modérée, davantage de repos en fin de phase.", "en": "Moderate intensity: pilates, brisk walking, moderate strength work, more rest toward the end." },
+    "cookingStyle": { "fr": "Glucides complexes et aliments riches en magnésium et B6 pour atténuer le SPM ; repas réconfortants qui évitent les pics de glycémie.", "en": "Complex carbs and magnesium/B6-rich foods to ease PMS; grounding meals that avoid blood-sugar spikes." },
+    "seedCycling": { "fr": "Comme pour la phase ovulatoire : 1 à 2 cuillères à soupe par jour de graines de sésame et de tournesol moulues.", "en": "Same as the ovulatory phase: 1–2 tablespoons a day of ground sesame and sunflower seeds." },
+    "userNotes": ""
+  }
+]
