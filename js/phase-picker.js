@@ -8,7 +8,7 @@ import { escapeHtml } from './utils.js';
 import { render as rerenderRoute } from './router.js';
 
 const PHASE_ICONS = {
-  menstrual: '🌙',
+  menstrual: '❄️',
   follicular: '🌱',
   ovulatory: '☀️',
   luteal: '🍂',
