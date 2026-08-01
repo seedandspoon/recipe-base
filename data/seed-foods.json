@@ -1,42 +1,852 @@
 [
-  { "id": "food_spinach", "name_fr": "épinard", "name_en": "spinach", "aliases": ["épinards", "baby spinach", "pousse d'épinard", "pousses d'épinard"], "category": "vegetable", "phases": ["menstrual", "luteal"], "gi": { "level": "na", "value": null }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_kale", "name_fr": "chou kale", "name_en": "kale", "aliases": ["kale", "chou frisé"], "category": "vegetable", "phases": ["menstrual"], "gi": { "level": "na", "value": null }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_lentils", "name_fr": "lentille", "name_en": "lentil", "aliases": ["lentilles", "lentils", "lentille corail", "lentille verte"], "category": "legume", "phases": ["menstrual"], "gi": { "level": "low", "value": 32 }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_chickpeas", "name_fr": "pois chiche", "name_en": "chickpea", "aliases": ["pois chiches", "chickpeas", "garbanzo"], "category": "legume", "phases": ["luteal"], "gi": { "level": "low", "value": 28 }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_ground_beef", "name_fr": "bœuf haché", "name_en": "ground beef", "aliases": ["boeuf hache", "viande hachée", "beef mince"], "category": "meat", "phases": ["menstrual"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "meat_fish" },
-  { "id": "food_ginger", "name_fr": "gingembre", "name_en": "ginger", "aliases": ["gingembre frais", "fresh ginger"], "category": "spice", "phases": ["menstrual"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_turmeric", "name_fr": "curcuma", "name_en": "turmeric", "aliases": ["curcuma moulu", "turmeric powder"], "category": "spice", "phases": ["menstrual", "luteal"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "spices" },
-  { "id": "food_egg", "name_fr": "œuf", "name_en": "egg", "aliases": ["oeuf", "oeufs", "œufs", "eggs"], "category": "protein", "phases": ["menstrual", "follicular"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "dairy_eggs" },
-  { "id": "food_salmon", "name_fr": "saumon", "name_en": "salmon", "aliases": ["filet de saumon", "salmon fillet"], "category": "fish", "phases": ["menstrual", "luteal"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "meat_fish" },
-  { "id": "food_dark_chocolate", "name_fr": "chocolat noir", "name_en": "dark chocolate", "aliases": ["chocolat", "dark chocolate"], "category": "pantry", "phases": ["menstrual", "luteal"], "gi": { "level": "low", "value": 40 }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_pumpkin_seeds", "name_fr": "graine de courge", "name_en": "pumpkin seed", "aliases": ["graines de courge", "graines de courges", "pumpkin seeds", "pepitas"], "category": "seed", "phases": ["menstrual", "follicular"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_flax_seeds", "name_fr": "graine de lin", "name_en": "flax seed", "aliases": ["graines de lin", "flaxseed", "flax seeds", "lin moulu"], "category": "seed", "phases": ["menstrual", "follicular"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_sesame_seeds", "name_fr": "graine de sésame", "name_en": "sesame seed", "aliases": ["graines de sésame", "sesame seeds", "graine de sesame"], "category": "seed", "phases": ["ovulatory", "luteal"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_sunflower_seeds", "name_fr": "graine de tournesol", "name_en": "sunflower seed", "aliases": ["graines de tournesol", "sunflower seeds"], "category": "seed", "phases": ["ovulatory", "luteal"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_quinoa", "name_fr": "quinoa", "name_en": "quinoa", "aliases": [], "category": "grain", "phases": ["follicular"], "gi": { "level": "low", "value": 53 }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_avocado", "name_fr": "avocat", "name_en": "avocado", "aliases": ["avocats", "avocados"], "category": "fruit", "phases": ["follicular", "ovulatory"], "gi": { "level": "na", "value": null }, "organic": { "level": "low" }, "aisle": "produce" },
-  { "id": "food_yogurt", "name_fr": "yaourt nature", "name_en": "plain yogurt", "aliases": ["yaourt", "yaourts", "plain yogurt", "yogurt"], "category": "dairy", "phases": ["follicular"], "gi": { "level": "low", "value": 35 }, "organic": { "level": "na" }, "aisle": "dairy_eggs" },
-  { "id": "food_blueberries", "name_fr": "myrtille", "name_en": "blueberry", "aliases": ["myrtilles", "blueberries"], "category": "fruit", "phases": ["follicular", "ovulatory"], "gi": { "level": "medium", "value": 53 }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_strawberries", "name_fr": "fraise", "name_en": "strawberry", "aliases": ["fraises", "strawberries"], "category": "fruit", "phases": ["follicular"], "gi": { "level": "low", "value": 40 }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_orange", "name_fr": "orange", "name_en": "orange", "aliases": ["oranges"], "category": "fruit", "phases": ["follicular", "ovulatory"], "gi": { "level": "low", "value": 43 }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_broccoli", "name_fr": "brocoli", "name_en": "broccoli", "aliases": ["brocolis", "broccolis"], "category": "vegetable", "phases": ["ovulatory"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_cauliflower", "name_fr": "chou-fleur", "name_en": "cauliflower", "aliases": ["chou fleur", "choux-fleurs"], "category": "vegetable", "phases": ["ovulatory"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_tomato", "name_fr": "tomate", "name_en": "tomato", "aliases": ["tomates", "tomatoes"], "category": "vegetable", "phases": ["ovulatory"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_cucumber", "name_fr": "concombre", "name_en": "cucumber", "aliases": ["concombres", "cucumbers"], "category": "vegetable", "phases": ["ovulatory"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_sweet_potato", "name_fr": "patate douce", "name_en": "sweet potato", "aliases": ["patates douces", "sweet potatoes"], "category": "vegetable", "phases": ["luteal"], "gi": { "level": "medium", "value": 63 }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_brown_rice", "name_fr": "riz complet", "name_en": "brown rice", "aliases": ["riz brun"], "category": "grain", "phases": ["luteal"], "gi": { "level": "low", "value": 50 }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_oats", "name_fr": "flocons d'avoine", "name_en": "rolled oats", "aliases": ["avoine", "oats", "oatmeal", "flocon d'avoine"], "category": "grain", "phases": ["luteal"], "gi": { "level": "medium", "value": 55 }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_banana", "name_fr": "banane", "name_en": "banana", "aliases": ["bananes", "bananas"], "category": "fruit", "phases": ["luteal"], "gi": { "level": "medium", "value": 51 }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_walnuts", "name_fr": "noix", "name_en": "walnut", "aliases": ["walnuts", "cerneaux de noix"], "category": "nut", "phases": ["luteal"], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_apple", "name_fr": "pomme", "name_en": "apple", "aliases": ["pommes", "apples"], "category": "fruit", "phases": ["follicular"], "gi": { "level": "low", "value": 36 }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_grapes", "name_fr": "raisin", "name_en": "grape", "aliases": ["raisins", "grapes"], "category": "fruit", "phases": [], "gi": { "level": "medium", "value": 59 }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_cherries", "name_fr": "cerise", "name_en": "cherry", "aliases": ["cerises", "cherries"], "category": "fruit", "phases": [], "gi": { "level": "low", "value": 22 }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_bell_pepper", "name_fr": "poivron", "name_en": "bell pepper", "aliases": ["poivrons", "bell peppers", "peppers"], "category": "vegetable", "phases": ["ovulatory"], "gi": { "level": "na", "value": null }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_green_beans", "name_fr": "haricot vert", "name_en": "green bean", "aliases": ["haricots verts", "green beans"], "category": "vegetable", "phases": [], "gi": { "level": "na", "value": null }, "organic": { "level": "high" }, "aisle": "produce" },
-  { "id": "food_onion", "name_fr": "oignon", "name_en": "onion", "aliases": ["oignons", "onions"], "category": "vegetable", "phases": [], "gi": { "level": "low", "value": 15 }, "organic": { "level": "low" }, "aisle": "produce" },
-  { "id": "food_garlic", "name_fr": "ail", "name_en": "garlic", "aliases": ["gousse d'ail", "gousses d'ail", "garlic clove"], "category": "vegetable", "phases": [], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_olive_oil", "name_fr": "huile d'olive", "name_en": "olive oil", "aliases": [], "category": "fat", "phases": [], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_carrot", "name_fr": "carotte", "name_en": "carrot", "aliases": ["carottes", "carrots"], "category": "vegetable", "phases": ["menstrual"], "gi": { "level": "low", "value": 39 }, "organic": { "level": "na" }, "aisle": "produce" },
-  { "id": "food_white_pasta", "name_fr": "pâtes", "name_en": "pasta", "aliases": ["pate", "pâte", "spaghetti", "spaghettis"], "category": "grain", "phases": [], "gi": { "level": "medium", "value": 50 }, "organic": { "level": "na" }, "aisle": "pantry" },
-  { "id": "food_chicken_breast", "name_fr": "blanc de poulet", "name_en": "chicken breast", "aliases": ["poulet", "chicken", "escalope de poulet"], "category": "meat", "phases": [], "gi": { "level": "na", "value": null }, "organic": { "level": "na" }, "aisle": "meat_fish" }
+  {
+    "id": "food_spinach",
+    "name_fr": "épinard",
+    "name_en": "spinach",
+    "aliases": [
+      "épinards",
+      "baby spinach",
+      "pousse d'épinard",
+      "pousses d'épinard"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "menstrual",
+      "luteal"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_kale",
+    "name_fr": "chou kale",
+    "name_en": "kale",
+    "aliases": [
+      "kale",
+      "chou frisé"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "menstrual"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_lentils",
+    "name_fr": "lentille",
+    "name_en": "lentil",
+    "aliases": [
+      "lentilles",
+      "lentils",
+      "lentille corail",
+      "lentille verte"
+    ],
+    "category": "legume",
+    "phases": [
+      "menstrual"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 32
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "pantry_savory"
+  },
+  {
+    "id": "food_chickpeas",
+    "name_fr": "pois chiche",
+    "name_en": "chickpea",
+    "aliases": [
+      "pois chiches",
+      "chickpeas",
+      "garbanzo"
+    ],
+    "category": "legume",
+    "phases": [
+      "luteal"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 28
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "pantry_savory"
+  },
+  {
+    "id": "food_ground_beef",
+    "name_fr": "bœuf haché",
+    "name_en": "ground beef",
+    "aliases": [
+      "boeuf hache",
+      "viande hachée",
+      "beef mince"
+    ],
+    "category": "meat",
+    "phases": [
+      "menstrual"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "meat_poultry"
+  },
+  {
+    "id": "food_ginger",
+    "name_fr": "gingembre",
+    "name_en": "ginger",
+    "aliases": [
+      "gingembre frais",
+      "fresh ginger"
+    ],
+    "category": "spice",
+    "phases": [
+      "menstrual"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_turmeric",
+    "name_fr": "curcuma",
+    "name_en": "turmeric",
+    "aliases": [
+      "curcuma moulu",
+      "turmeric powder"
+    ],
+    "category": "spice",
+    "phases": [
+      "menstrual",
+      "luteal"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "herbs_spices"
+  },
+  {
+    "id": "food_egg",
+    "name_fr": "œuf",
+    "name_en": "egg",
+    "aliases": [
+      "oeuf",
+      "oeufs",
+      "œufs",
+      "eggs"
+    ],
+    "category": "protein",
+    "phases": [
+      "menstrual",
+      "follicular"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "dairy_eggs"
+  },
+  {
+    "id": "food_salmon",
+    "name_fr": "saumon",
+    "name_en": "salmon",
+    "aliases": [
+      "filet de saumon",
+      "salmon fillet"
+    ],
+    "category": "fish",
+    "phases": [
+      "menstrual",
+      "luteal"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "fish"
+  },
+  {
+    "id": "food_dark_chocolate",
+    "name_fr": "chocolat noir",
+    "name_en": "dark chocolate",
+    "aliases": [
+      "chocolat",
+      "dark chocolate"
+    ],
+    "category": "pantry",
+    "phases": [
+      "menstrual",
+      "luteal"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 40
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "pantry_sweet"
+  },
+  {
+    "id": "food_pumpkin_seeds",
+    "name_fr": "graine de courge",
+    "name_en": "pumpkin seed",
+    "aliases": [
+      "graines de courge",
+      "graines de courges",
+      "pumpkin seeds",
+      "pepitas"
+    ],
+    "category": "seed",
+    "phases": [
+      "menstrual",
+      "follicular"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "seeds_dried_fruits"
+  },
+  {
+    "id": "food_flax_seeds",
+    "name_fr": "graine de lin",
+    "name_en": "flax seed",
+    "aliases": [
+      "graines de lin",
+      "flaxseed",
+      "flax seeds",
+      "lin moulu"
+    ],
+    "category": "seed",
+    "phases": [
+      "menstrual",
+      "follicular"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "seeds_dried_fruits"
+  },
+  {
+    "id": "food_sesame_seeds",
+    "name_fr": "graine de sésame",
+    "name_en": "sesame seed",
+    "aliases": [
+      "graines de sésame",
+      "sesame seeds",
+      "graine de sesame"
+    ],
+    "category": "seed",
+    "phases": [
+      "ovulatory",
+      "luteal"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "seeds_dried_fruits"
+  },
+  {
+    "id": "food_sunflower_seeds",
+    "name_fr": "graine de tournesol",
+    "name_en": "sunflower seed",
+    "aliases": [
+      "graines de tournesol",
+      "sunflower seeds"
+    ],
+    "category": "seed",
+    "phases": [
+      "ovulatory",
+      "luteal"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "seeds_dried_fruits"
+  },
+  {
+    "id": "food_quinoa",
+    "name_fr": "quinoa",
+    "name_en": "quinoa",
+    "aliases": [],
+    "category": "grain",
+    "phases": [
+      "follicular"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 53
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "pantry_savory"
+  },
+  {
+    "id": "food_avocado",
+    "name_fr": "avocat",
+    "name_en": "avocado",
+    "aliases": [
+      "avocats",
+      "avocados"
+    ],
+    "category": "fruit",
+    "phases": [
+      "follicular",
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "low"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_yogurt",
+    "name_fr": "yaourt nature",
+    "name_en": "plain yogurt",
+    "aliases": [
+      "yaourt",
+      "yaourts",
+      "plain yogurt",
+      "yogurt"
+    ],
+    "category": "dairy",
+    "phases": [
+      "follicular"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 35
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "dairy_eggs"
+  },
+  {
+    "id": "food_blueberries",
+    "name_fr": "myrtille",
+    "name_en": "blueberry",
+    "aliases": [
+      "myrtilles",
+      "blueberries"
+    ],
+    "category": "fruit",
+    "phases": [
+      "follicular",
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "medium",
+      "value": 53
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_strawberries",
+    "name_fr": "fraise",
+    "name_en": "strawberry",
+    "aliases": [
+      "fraises",
+      "strawberries"
+    ],
+    "category": "fruit",
+    "phases": [
+      "follicular"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 40
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_orange",
+    "name_fr": "orange",
+    "name_en": "orange",
+    "aliases": [
+      "oranges"
+    ],
+    "category": "fruit",
+    "phases": [
+      "follicular",
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 43
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_broccoli",
+    "name_fr": "brocoli",
+    "name_en": "broccoli",
+    "aliases": [
+      "brocolis",
+      "broccolis"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_cauliflower",
+    "name_fr": "chou-fleur",
+    "name_en": "cauliflower",
+    "aliases": [
+      "chou fleur",
+      "choux-fleurs"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_tomato",
+    "name_fr": "tomate",
+    "name_en": "tomato",
+    "aliases": [
+      "tomates",
+      "tomatoes"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_cucumber",
+    "name_fr": "concombre",
+    "name_en": "cucumber",
+    "aliases": [
+      "concombres",
+      "cucumbers"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_sweet_potato",
+    "name_fr": "patate douce",
+    "name_en": "sweet potato",
+    "aliases": [
+      "patates douces",
+      "sweet potatoes"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "luteal"
+    ],
+    "gi": {
+      "level": "medium",
+      "value": 63
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_brown_rice",
+    "name_fr": "riz complet",
+    "name_en": "brown rice",
+    "aliases": [
+      "riz brun"
+    ],
+    "category": "grain",
+    "phases": [
+      "luteal"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 50
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "pantry_savory"
+  },
+  {
+    "id": "food_oats",
+    "name_fr": "flocons d'avoine",
+    "name_en": "rolled oats",
+    "aliases": [
+      "avoine",
+      "oats",
+      "oatmeal",
+      "flocon d'avoine"
+    ],
+    "category": "grain",
+    "phases": [
+      "luteal"
+    ],
+    "gi": {
+      "level": "medium",
+      "value": 55
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "pantry_sweet"
+  },
+  {
+    "id": "food_banana",
+    "name_fr": "banane",
+    "name_en": "banana",
+    "aliases": [
+      "bananes",
+      "bananas"
+    ],
+    "category": "fruit",
+    "phases": [
+      "luteal"
+    ],
+    "gi": {
+      "level": "medium",
+      "value": 51
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_walnuts",
+    "name_fr": "noix",
+    "name_en": "walnut",
+    "aliases": [
+      "walnuts",
+      "cerneaux de noix"
+    ],
+    "category": "nut",
+    "phases": [
+      "luteal"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "seeds_dried_fruits"
+  },
+  {
+    "id": "food_apple",
+    "name_fr": "pomme",
+    "name_en": "apple",
+    "aliases": [
+      "pommes",
+      "apples"
+    ],
+    "category": "fruit",
+    "phases": [
+      "follicular"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 36
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_grapes",
+    "name_fr": "raisin",
+    "name_en": "grape",
+    "aliases": [
+      "raisins",
+      "grapes"
+    ],
+    "category": "fruit",
+    "phases": [],
+    "gi": {
+      "level": "medium",
+      "value": 59
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_cherries",
+    "name_fr": "cerise",
+    "name_en": "cherry",
+    "aliases": [
+      "cerises",
+      "cherries"
+    ],
+    "category": "fruit",
+    "phases": [],
+    "gi": {
+      "level": "low",
+      "value": 22
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_bell_pepper",
+    "name_fr": "poivron",
+    "name_en": "bell pepper",
+    "aliases": [
+      "poivrons",
+      "bell peppers",
+      "peppers"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "ovulatory"
+    ],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_green_beans",
+    "name_fr": "haricot vert",
+    "name_en": "green bean",
+    "aliases": [
+      "haricots verts",
+      "green beans"
+    ],
+    "category": "vegetable",
+    "phases": [],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "high"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_onion",
+    "name_fr": "oignon",
+    "name_en": "onion",
+    "aliases": [
+      "oignons",
+      "onions"
+    ],
+    "category": "vegetable",
+    "phases": [],
+    "gi": {
+      "level": "low",
+      "value": 15
+    },
+    "organic": {
+      "level": "low"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_garlic",
+    "name_fr": "ail",
+    "name_en": "garlic",
+    "aliases": [
+      "gousse d'ail",
+      "gousses d'ail",
+      "garlic clove"
+    ],
+    "category": "vegetable",
+    "phases": [],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_olive_oil",
+    "name_fr": "huile d'olive",
+    "name_en": "olive oil",
+    "aliases": [],
+    "category": "fat",
+    "phases": [],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "herbs_spices"
+  },
+  {
+    "id": "food_carrot",
+    "name_fr": "carotte",
+    "name_en": "carrot",
+    "aliases": [
+      "carottes",
+      "carrots"
+    ],
+    "category": "vegetable",
+    "phases": [
+      "menstrual"
+    ],
+    "gi": {
+      "level": "low",
+      "value": 39
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "produce"
+  },
+  {
+    "id": "food_white_pasta",
+    "name_fr": "pâtes",
+    "name_en": "pasta",
+    "aliases": [
+      "pate",
+      "pâte",
+      "spaghetti",
+      "spaghettis"
+    ],
+    "category": "grain",
+    "phases": [],
+    "gi": {
+      "level": "medium",
+      "value": 50
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "pantry_savory"
+  },
+  {
+    "id": "food_chicken_breast",
+    "name_fr": "blanc de poulet",
+    "name_en": "chicken breast",
+    "aliases": [
+      "poulet",
+      "chicken",
+      "escalope de poulet"
+    ],
+    "category": "meat",
+    "phases": [],
+    "gi": {
+      "level": "na",
+      "value": null
+    },
+    "organic": {
+      "level": "na"
+    },
+    "aisle": "meat_poultry"
+  }
 ]

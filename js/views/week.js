@@ -4,26 +4,52 @@ import { escapeHtml, parseQuantity, formatQuantity } from '../utils.js';
 import { matchIngredientLine, buildFoodIndex, normalize, singularize } from '../matcher.js';
 import { toast } from '../toast.js';
 import { go } from '../router.js';
+import { matchBadge } from './shared.js';
 
 export async function renderWeek() {
   paint();
 }
 
 function paint() {
+  const cycleOn = state.settings.cycleModeEnabled;
+  const currentPhaseId = cycleOn ? state.settings.currentPhaseId : null;
   const entries = state.weekPlan
     .map((w) => ({ ...w, recipe: state.recipes.find((r) => r.id === w.recipeId) }))
     .filter((e) => e.recipe);
+  const shoppingCount = (state.shoppingList && state.shoppingList.items && state.shoppingList.items.length) || 0;
 
   document.getElementById('view').innerHTML = `
     <h1>${t('this_week')}</h1>
-    ${entries.length === 0 ? `<div class="empty-state">${t('empty_week')}</div>` : entries.map((e) => planItemHtml(e)).join('')}
-    ${entries.length > 0 ? `<button class="btn btn-primary mt-1" id="generate-btn">${t('generate_list')}</button>` : ''}
+    ${entries.length === 0 ? `<div class="empty-state">${t('empty_week')}</div>` : `
+      <div class="recipe-grid">
+        ${entries.map((e) => weekCardHtml(e, currentPhaseId)).join('')}
+      </div>
+      <button class="btn btn-primary mt-1" id="generate-btn">${t('generate_list')}</button>
+    `}
+
+    ${shoppingCount > 0 ? `
+      <div class="card mt-1 flex-between">
+        <div>
+          <strong>🛒 ${t('shopping_list')}</strong>
+          <div class="small muted">${shoppingCount} ${document.documentElement.lang === 'en' ? 'items, summed and grouped by aisle.' : 'lignes, quantités additionnées et rangées par rayon.'}</div>
+        </div>
+        <a class="btn btn-primary" href="#/shopping">${document.documentElement.lang === 'en' ? 'Open' : 'Ouvrir'}</a>
+      </div>` : ''}
   `;
 
-  document.querySelectorAll('[data-portions-for]').forEach((input) => {
-    input.addEventListener('change', async () => {
-      const recipeId = input.dataset.portionsFor;
-      await setWeekPlanEntry(recipeId, Number(input.value) || 0);
+  document.querySelectorAll('[data-step-down]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const recipeId = btn.dataset.stepDown;
+      const entry = state.weekPlan.find((w) => w.recipeId === recipeId);
+      await setWeekPlanEntry(recipeId, Math.max(0, (entry?.portions || 0) - 1));
+      paint();
+    });
+  });
+  document.querySelectorAll('[data-step-up]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const recipeId = btn.dataset.stepUp;
+      const entry = state.weekPlan.find((w) => w.recipeId === recipeId);
+      await setWeekPlanEntry(recipeId, (entry?.portions || 0) + 1);
       paint();
     });
   });
@@ -41,17 +67,31 @@ function paint() {
   });
 }
 
-function planItemHtml(e) {
+function weekCardHtml(e, currentPhaseId) {
+  const { recipe, portions } = e;
+  const photo = recipe.photo
+    ? `<img class="thumb" src="${recipe.photo}" alt="">`
+    : `<div class="thumb placeholder">🍽️</div>`;
+  const totalTime = (Number(recipe.prepTime) || 0) + (Number(recipe.cookTime) || 0);
   return `
-    <div class="plan-item">
-      ${e.recipe.photo ? `<img src="${e.recipe.photo}" alt="">` : ''}
-      <div class="grow">
-        <a href="#/recipe/${e.recipe.id}">${escapeHtml(e.recipe.title)}</a>
-        <div class="small muted">${t('servings')}: ${e.recipe.servings}</div>
+    <div class="recipe-card recipe-card--week">
+      <a class="card-link" href="#/recipe/${recipe.id}">
+        <div class="thumb-wrap">${photo}</div>
+        <div class="body">
+          <div class="title">${escapeHtml(recipe.title)}</div>
+          <div class="meta">
+            ${totalTime ? `<span>${totalTime} ${t('minutes')}</span>` : ''}
+            <span>${t('servings')}: ${recipe.servings}</span>
+          </div>
+          <div class="badges">${matchBadge(recipe, currentPhaseId, state.foods)}</div>
+        </div>
+      </a>
+      <div class="card-stepper">
+        <button type="button" data-step-down="${recipe.id}" aria-label="-">−</button>
+        <span>${portions}</span>
+        <button type="button" data-step-up="${recipe.id}" aria-label="+">+</button>
       </div>
-      <label class="small muted" style="width:auto;">${t('portions_to_cook')}</label>
-      <input type="number" min="0" value="${e.portions}" data-portions-for="${e.recipeId}" />
-      <button class="btn btn-small" data-remove-week="${e.recipeId}">${t('remove')}</button>
+      <button type="button" class="card-trash" data-remove-week="${recipe.id}" title="${t('remove')}" aria-label="${t('remove')}">🗑</button>
     </div>`;
 }
 
@@ -59,7 +99,7 @@ async function generateShoppingList(entries) {
   const foodIndex = buildFoodIndex(state.foods);
   const foodById = new Map(state.foods.map((f) => [f.id, f]));
 
-  // group key -> { foodId, name, aisle, parts: Map(unit -> qtySum) }
+  // group key -> { foodId, name, aisle, parts: Map(unit -> qtySum), recipeTitles: Set }
   const groups = new Map();
 
   for (const e of entries) {
@@ -74,9 +114,11 @@ async function generateShoppingList(entries) {
           name: food ? food.name_fr : ing.name,
           aisle: food ? food.aisle : 'other',
           parts: new Map(),
+          recipeTitles: new Set(),
         });
       }
       const group = groups.get(key);
+      group.recipeTitles.add(e.recipe.title);
       const qty = parseQuantity(ing.quantity);
       const unit = (ing.unit || '').trim().toLowerCase();
       const scaledQty = qty === null ? null : qty * factor;
@@ -101,6 +143,7 @@ async function generateShoppingList(entries) {
       foodId: g.foodId,
       label,
       aisle: g.aisle,
+      recipeTitles: [...g.recipeTitles],
       checked: false,
     };
   });

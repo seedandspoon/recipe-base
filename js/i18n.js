@@ -111,6 +111,9 @@ export const STRINGS = {
   empty_shopping_list: { fr: 'Pas encore de liste de courses. Génère-la depuis "Cette semaine".', en: 'No shopping list yet. Generate it from "This week".' },
   clear_checked: { fr: 'Effacer les cases cochées', en: 'Clear checked items' },
   move_to_aisle: { fr: 'Déplacer vers…', en: 'Move to aisle…' },
+  add_item: { fr: 'Ajouter un article', en: 'Add an item' },
+  copy_list: { fr: 'Copier', en: 'Copy' },
+  copy_failed: { fr: 'Impossible de copier', en: 'Could not copy' },
 
   // Import
   import: { fr: 'Importer', en: 'Import' },
@@ -142,13 +145,13 @@ export const STRINGS = {
 
   // Aisles (used for shopping-list grouping)
   aisle_produce: { fr: 'Fruits & légumes', en: 'Produce' },
-  aisle_meat_fish: { fr: 'Viande & poisson', en: 'Meat & fish' },
+  aisle_meat_poultry: { fr: 'Boucherie & volaille', en: 'Meat & poultry' },
+  aisle_fish: { fr: 'Poissonnerie', en: 'Fish' },
   aisle_dairy_eggs: { fr: 'Crèmerie & œufs', en: 'Dairy & eggs' },
-  aisle_bakery: { fr: 'Boulangerie', en: 'Bakery' },
-  aisle_pantry: { fr: 'Épicerie', en: 'Pantry' },
-  aisle_spices: { fr: 'Épices & condiments', en: 'Spices & condiments' },
-  aisle_frozen: { fr: 'Surgelés', en: 'Frozen' },
-  aisle_beverages: { fr: 'Boissons', en: 'Beverages' },
+  aisle_pantry_savory: { fr: 'Épicerie salée', en: 'Savory pantry' },
+  aisle_pantry_sweet: { fr: 'Épicerie sucrée & petit-déjeuner', en: 'Sweet pantry & breakfast' },
+  aisle_herbs_spices: { fr: 'Herbes, épices & condiments', en: 'Herbs, spices & condiments' },
+  aisle_seeds_dried_fruits: { fr: 'Graines & fruits secs', en: 'Seeds & dried fruit' },
   aisle_other: { fr: 'Autre', en: 'Other' },
 
   meal_breakfast: { fr: 'Petit-déjeuner', en: 'Breakfast' },

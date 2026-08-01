@@ -8,7 +8,10 @@ export const MEAL_TYPE_ICON_FALLBACK = '🍴';
 export const SEASONS = ['spring', 'summer', 'autumn', 'winter', 'any'];
 export const DIFFICULTIES = ['easy', 'medium', 'hard'];
 export const STATUSES = ['draft', 'active', 'archived'];
-export const AISLES = ['produce', 'meat_fish', 'dairy_eggs', 'bakery', 'pantry', 'spices', 'frozen', 'beverages', 'other'];
+export const AISLES = [
+  'produce', 'meat_poultry', 'fish', 'dairy_eggs',
+  'pantry_savory', 'pantry_sweet', 'herbs_spices', 'seeds_dried_fruits', 'other',
+];
 export const FOOD_CATEGORIES = ['vegetable', 'fruit', 'legume', 'grain', 'meat', 'fish', 'dairy', 'protein', 'seed', 'nut', 'spice', 'fat', 'pantry'];
 
 export function stars(rating) {
