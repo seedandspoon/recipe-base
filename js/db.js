@@ -117,6 +117,8 @@ const DEFAULT_SETTINGS = {
   currentPhaseId: 'menstrual',
   language: 'fr',
   onboarded: false,
+  tags: null, // null = not yet initialized; store.boot() seeds it from existing recipes once
+  cuisines: null,
 };
 
 export async function getSettings() {
@@ -129,6 +131,17 @@ export async function saveSettings(patch) {
   const next = { ...current, ...patch, key: 'app' };
   await db.put('settings', next);
   return next;
+}
+
+// Wipes recipes and everything tied to them (week plan, shopping list) —
+// deliberately leaves the food library, phase content and settings alone,
+// since those are reference data she may have carefully corrected.
+export async function clearRecipesAndPlanning() {
+  await Promise.all([
+    db.clear('recipes'),
+    db.clear('weekPlan'),
+    db.clear('shoppingList'),
+  ]);
 }
 
 // --- Full backup export / import -------------------------------------------

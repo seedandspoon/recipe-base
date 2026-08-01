@@ -2,7 +2,8 @@
 // everything in memory and writing straight through to IndexedDB is simpler
 // (and easier to maintain) than a fine-grained reactive layer.
 
-import { db, newId, getSettings, saveSettings, seedIfEmpty } from './db.js';
+import { db, newId, getSettings, saveSettings, seedIfEmpty, clearRecipesAndPlanning } from './db.js';
+import { uniqueSorted } from './utils.js';
 
 export const state = {
   recipes: [],
@@ -40,6 +41,17 @@ export async function boot() {
   state.settings = settings;
   state.shoppingList = shoppingList || { id: 'current', items: [] };
   state.ready = true;
+
+  // First run (or upgrading from before tags/cuisines existed): seed the
+  // managed lists from whatever's already on her recipes, so nothing that
+  // was typed before this existed gets lost.
+  if (settings.tags === null || settings.cuisines === null) {
+    const patch = {};
+    if (settings.tags === null) patch.tags = uniqueSorted(recipes.flatMap((r) => r.tags || []));
+    if (settings.cuisines === null) patch.cuisines = uniqueSorted(recipes.map((r) => r.cuisine));
+    await updateSettings(patch);
+  }
+
   notify();
   return state;
 }
@@ -79,6 +91,39 @@ export async function deleteRecipe(id) {
 export function findRecipeBySource(source) {
   if (!source) return null;
   return state.recipes.find((r) => r.source && r.source.trim() === source.trim()) || null;
+}
+
+// Wipes recipes + week plan + shopping list. Leaves the food library,
+// phase content and settings (tags/cuisines lists included) untouched.
+export async function clearAllRecipeData() {
+  await clearRecipesAndPlanning();
+  state.recipes = [];
+  state.weekPlan = [];
+  state.shoppingList = { id: 'current', items: [] };
+  notify();
+}
+
+// Adds a tag/cuisine to the managed list if it isn't already there.
+// Recipes referencing a removed tag/cuisine keep their own value —
+// removing it from the list only stops it being offered as a choice.
+export async function ensureTagExists(tag) {
+  const clean = (tag || '').trim();
+  if (!clean || state.settings.tags.includes(clean)) return;
+  await updateSettings({ tags: uniqueSorted([...state.settings.tags, clean]) });
+}
+
+export async function ensureCuisineExists(cuisine) {
+  const clean = (cuisine || '').trim();
+  if (!clean || state.settings.cuisines.includes(clean)) return;
+  await updateSettings({ cuisines: uniqueSorted([...state.settings.cuisines, clean]) });
+}
+
+export async function removeTag(tag) {
+  await updateSettings({ tags: state.settings.tags.filter((t) => t !== tag) });
+}
+
+export async function removeCuisine(cuisine) {
+  await updateSettings({ cuisines: state.settings.cuisines.filter((c) => c !== cuisine) });
 }
 
 // --- Foods ---------------------------------------------------------------

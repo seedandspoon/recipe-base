@@ -1,7 +1,7 @@
-import { state, saveRecipe } from '../store.js';
+import { state, saveRecipe, ensureTagExists, ensureCuisineExists } from '../store.js';
 import { t } from '../i18n.js';
 import { go } from '../router.js';
-import { escapeHtml, readFileAsDataURL, resizeImageDataUrl, normalizeStepSections } from '../utils.js';
+import { escapeHtml, readFileAsDataURL, resizeImageDataUrl, normalizeStepSections, uniqueSorted } from '../utils.js';
 import { MEAL_TYPES, SEASONS, DIFFICULTIES, STATUSES, optionList } from './shared.js';
 import { toast } from '../toast.js';
 
@@ -60,8 +60,18 @@ function paint() {
       </div>
 
       <div class="field">
-        <label>${t('tags')} (${t('tags').toLowerCase()}, séparées par des virgules)</label>
-        <input id="rf-tags" value="${escapeHtml((draft.tags || []).join(', '))}" />
+        <label>${t('tags')}</label>
+        <div class="tag-picker">
+          ${(state.settings.tags || []).map((tag) => `
+            <label class="tag-pill ${(draft.tags || []).includes(tag) ? 'checked' : ''}">
+              <input type="checkbox" data-tag="${escapeHtml(tag)}" ${(draft.tags || []).includes(tag) ? 'checked' : ''} />
+              ${escapeHtml(tag)}
+            </label>`).join('')}
+        </div>
+        <div class="filter-row mt-1">
+          <input id="rf-new-tag" placeholder="${t('new_tag_placeholder')}" style="flex:1;" />
+          <button type="button" class="btn btn-small" id="rf-add-tag">+ ${t('add_short')}</button>
+        </div>
       </div>
 
       <div class="field-row">
@@ -71,7 +81,14 @@ function paint() {
         </div>
         <div class="field">
           <label>${t('cuisine')}</label>
-          <input id="rf-cuisine" value="${escapeHtml(draft.cuisine)}" />
+          <select id="rf-cuisine">
+            <option value="">—</option>
+            ${uniqueSorted([...(state.settings.cuisines || []), draft.cuisine]).map((c) => `<option value="${escapeHtml(c)}" ${c===draft.cuisine?'selected':''}>${escapeHtml(c)}</option>`).join('')}
+            <option value="__new__">+ ${t('new_cuisine_option')}</option>
+          </select>
+          <div id="rf-cuisine-new-wrap" class="mt-1" style="display:none;">
+            <input id="rf-cuisine-new" placeholder="${t('new_cuisine_placeholder')}" />
+          </div>
         </div>
         <div class="field">
           <label>${t('season')}</label>
@@ -187,9 +204,10 @@ function readFormIntoDraft() {
   draft.title = document.getElementById('rf-title').value.trim();
   draft.description = document.getElementById('rf-desc').value;
   draft.source = document.getElementById('rf-source').value.trim();
-  draft.tags = document.getElementById('rf-tags').value.split(',').map((s) => s.trim()).filter(Boolean);
+  // draft.tags is kept in sync live by the tag checkboxes/add button, not read here.
+  const cuisineSelect = document.getElementById('rf-cuisine').value;
+  draft.cuisine = cuisineSelect === '__new__' ? document.getElementById('rf-cuisine-new').value.trim() : cuisineSelect;
   draft.mealType = document.getElementById('rf-mealType').value;
-  draft.cuisine = document.getElementById('rf-cuisine').value.trim();
   draft.season = document.getElementById('rf-season').value;
   draft.difficulty = document.getElementById('rf-difficulty').value;
   draft.rating = Number(document.getElementById('rf-rating').value);
@@ -282,6 +300,29 @@ function bindEvents() {
     });
   });
 
+  document.querySelectorAll('[data-tag]').forEach((cb) => {
+    cb.addEventListener('change', () => {
+      const tag = cb.dataset.tag;
+      draft.tags = cb.checked
+        ? [...(draft.tags || []), tag]
+        : (draft.tags || []).filter((t) => t !== tag);
+      cb.closest('.tag-pill').classList.toggle('checked', cb.checked);
+    });
+  });
+
+  document.getElementById('rf-add-tag').addEventListener('click', async () => {
+    const input = document.getElementById('rf-new-tag');
+    const tag = input.value.trim();
+    if (!tag) return;
+    await ensureTagExists(tag);
+    mutate(() => { draft.tags = [...(draft.tags || []), tag]; });
+  });
+
+  document.getElementById('rf-cuisine').addEventListener('change', (e) => {
+    document.getElementById('rf-cuisine-new-wrap').style.display = e.target.value === '__new__' ? 'block' : 'none';
+    if (e.target.value === '__new__') document.getElementById('rf-cuisine-new').focus();
+  });
+
   document.getElementById('rf-photo').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -298,6 +339,7 @@ function bindEvents() {
     draft.steps = draft.steps
       .map((section) => ({ title: (section.title || '').trim(), items: section.items.filter((s) => s && s.trim()) }))
       .filter((section) => section.items.length > 0);
+    if (draft.cuisine) await ensureCuisineExists(draft.cuisine);
     const saved = await saveRecipe(draft);
     toast(t('save') + ' ✓');
     go(`/recipe/${saved.id}`);
